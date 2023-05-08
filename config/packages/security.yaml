@@ -1,0 +1,35 @@
+security:
+    encoders:
+        App\Document\UsersDocument:
+            algorithm: auto
+
+    providers:
+        mongodb:
+            mongodb:
+                class: App\Document\UsersDocument
+                property: email
+
+    firewalls:
+        api_connection:
+            pattern: ^/api/connection
+            stateless: true
+            http_basic: true
+            provider: mongodb
+
+        admin_area:
+            pattern: ^/admin
+            provider: mongodb
+            form_login:
+                login_path: app_login
+                check_path: app_login
+            logout:
+                path: app_logout
+
+        main:
+            anonymous: true
+
+    access_control:
+        - { path: ^/api/, roles: [ROLE_SUPERADMIN, ROLE_ADMIN] }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/client_panel, roles: ROLE_CLIENT }
+        - { path: ^/specialist_panel, roles: ROLE_SPECIALIST }
