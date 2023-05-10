@@ -10,16 +10,30 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 class CategoriesDocument
 {
     /**
-     * @MongoDB\Id
+     * @MongoDB\Id(strategy="INCREMENT")
      */
-    protected $id;
+    private $id;
 
     /**
      * @MongoDB\Field(type="string")
      */
-    protected $category;
+    private $category;
 
-    // Agrega getters y setters para cada propiedad aquí.
+    /**
+     * Get the value of id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the value of category name
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
 }
 
 ?>

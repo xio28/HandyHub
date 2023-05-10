@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if controllerName == 'app_client_register' %}
+        {% include 'forms/client_form.html.twig' with { 'actionPath': controllerName } %}
+    {% elseif controllerName == 'app_specialist_register' %}
+        {% include 'forms/specialist_form.html.twig' with { 'actionPath': controllerName } %}
+    {% elseif controllerName == 'app_admin_register' %}
+        {% include 'forms/admin_form.html.twig' with { 'actionPath': controllerName } %}
+    {% elseif controllerName == 'app_category_register' %}
+        {% include 'forms/category_form.html.twig' with { 'actionPath': controllerName } %}
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('form') }}
+{% endblock %}

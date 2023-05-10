@@ -16,7 +16,7 @@ class ConnectionController extends AbstractController
     public function testConnection(DocumentManager $dm): Response
     {
         try {
-            $users = $dm->getRepository(UsersDocument::class)->findAll();
+            
 
             return new Response('Número de usuarios encontrados: ' . count($users));
         } catch (\Exception $e) {

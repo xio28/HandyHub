@@ -16,12 +16,12 @@ class ContractsDocument
     protected $id;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="User")
+     * @MongoDB\ReferenceOne(targetDocument="UsersDocument")
      */
     protected $client;
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="User")
+     * @MongoDB\ReferenceOne(targetDocument="UsersDocument")
      */
     protected $specialist;
 

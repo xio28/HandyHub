@@ -1,0 +1,28 @@
+{% extends base.html.twig %}
+
+{% block body %}
+    <div id="sidebar">
+        <a href="#users" class="sidebar-item">Users</a>
+        <a href="#contracts" class="sidebar-item">Contracts</a>
+        <a href="#categories" class="sidebar-item">Categories</a>
+    </div>
+
+    <div id="main-content">
+        <div id="users" class="content active">
+            <!-- Users content here -->
+            <h1>Users</h1>
+        </div>
+        <div id="contracts" class="content">
+            <!-- Contracts content here -->
+            <h1>Contracts</h1>
+        </div>
+        <div id="categories" class="content">
+            <!-- Categories content here -->
+            <h1>Categories</h1>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('panels') }}
+{% endblock %}
