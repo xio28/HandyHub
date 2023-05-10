@@ -154,7 +154,7 @@ $RECYCLE.BIN/
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
-/public/build/
+# /public/build/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
@@ -165,3 +165,4 @@ PRW.md
 ### Environment ###
 # .env
 .env.local
+.env.prod
