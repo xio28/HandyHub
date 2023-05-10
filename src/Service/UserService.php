@@ -36,28 +36,28 @@ class UserService {
         $this->router = $router;
     }
 
-    public function registerUser(Request $request)
+    public function registerClient(Request $request)
     {
         try {
             $user = new UsersDocument();
 
-            $user->setEmail($request->request->get('email'));
-            $user->setPassword($this->hashPassword($request->request->get('password'), $user));
-            $user->setName($request->request->get('name'));
-            $user->setSurname($request->request->get('surname'));
-            $user->setAddress($request->request->get('address'));
-            $user->setTelephone($request->request->get('telephone'));
+            $user->setEmail($request->get('email'));
+            $user->setPassword($this->hashPassword($request->get('password'), $user));
+            $user->setName($request->get('name'));
+            $user->setSurname($request->get('surname'));
+            $user->setAddress($request->get('address'));
+            $user->setTelephone($request->get('telephone'));
             $user->setRole(RolesConstants::ROLE_CLIENT);
-            $user->setImage($request->request->get('image'));
+            $user->setImage($request->get('image'));
 
             $creditCardInfo = [
-                'number' => $request->request->get('credit_card_number'),
-                'name' => $request->request->get('credit_card_name'),
-                'expiry' => $request->request->get('credit_card_expiry'),
-                'cvv' => $request->request->get('credit_card_cvv'),
+                'number' => $request->get('credit_card_number'),
+                'name' => $request->get('credit_card_name'),
+                'expiry' => $request->get('credit_card_expiry'),
+                'cvv' => $request->get('credit_card_cvv'),
             ];
             $user->setCreditCard($creditCardInfo);
-            $user->setPolicy($request->request->get('policy'));
+            $user->setPolicy($request->get('policy'));
 
             $user->setIsVerfied($user->getIsVerified());
             // ... establecer los otros campos aquí

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Form\ClientType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,12 +14,12 @@ class UserController extends AbstractController
     public function registerClient(Request $request, UserService $userService)
     {
         if ($request->isMethod('POST')) {
-            $userService->registerUser($request);
+            $userService->registerClient($request);
             // Aquí puedes redirigir al usuario a una página de éxito o simplemente devolver una respuesta 200.
             return new Response('Usuario registrado con éxito.', 200);
         } 
 
-        return $this->render('register/client_register.html.twig', [
+        return $this->render('register/register.html.twig', [
             'controllerName' => 'app_client_register'
         ]);
     }
@@ -46,6 +45,16 @@ class UserController extends AbstractController
 
         return $this->render('forms/client_register.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+    
+    /**
+     * @Route("/get/users", name="app_get_users")
+     */
+    public function getUsers(UserService $userService)
+    {
+        return $this->render('forms/get_users.html.twig', [
+            'users' => $userService->getUsers()
         ]);
     }
 }
