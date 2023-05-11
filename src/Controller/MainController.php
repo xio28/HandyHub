@@ -13,8 +13,9 @@ class MainController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('register/register.html.twig', [
-            'controllerName' => 'app_client_register'
+        return $this->render('index/index.html.twig', [
+            'register' => 'app_client_register',
+            'specialists' => ''
         ]);
     }
 

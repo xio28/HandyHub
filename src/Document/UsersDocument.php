@@ -3,11 +3,12 @@
 namespace App\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @MongoDB\Document(collection="users")
  */
-class UsersDocument {
+class UsersDocument implements UserInterface {
 
     /**
      * @MongoDB\Id(strategy="INCREMENT")
@@ -185,24 +186,28 @@ class UsersDocument {
      * @param string|null $image The image path or null to unset it.
      * @return self Returns the current UsersDocument instance for method chaining.
      */
-    public function setImage(?string $image): self
+    public function setImage(?string $image)
     {
         $this->image = $image;
     }
 
-    public function getPolicy(): bool {
+    public function getPolicy(): bool 
+    {
         return $this->policy;
     }
 
-    public function setPolicy(bool $policy) {
+    public function setPolicy(bool $policy) 
+    {
         $this->policy = $policy;
     }
 
-    public function getIsVerified(): bool {
+    public function getIsVerified(): bool 
+    {
         return $this->isVerified;
     }
 
-    public function setIsVerfied(bool $verified) {
+    public function setIsVerified(bool $verified) 
+    {
         $this->isVerified = $verified;
     }
 
@@ -224,6 +229,26 @@ class UsersDocument {
     public function setCreditCard(array $creditCard)
     {
         $this->creditCard = $creditCard;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        return [$this->role];
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function eraseCredentials(): void
+    {
+        //
     }
     
 }

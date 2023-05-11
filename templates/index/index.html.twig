@@ -1,1 +1,107 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}HandyHub | Inicio{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('index') }}
+{% endblock %}
+
+{% block body %}
+    {# CABECERA #}
+    <header class="header">
+        <div class="header__icon"><img src="{{ asset('resources/images/logo-light.png') }}" /></div>
+        <nav class="header__nav">
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Quiénes somos</a></li>
+                <li><a href="#">Servicios</a></li>
+                <li><a href="#">Soporte</a></li>
+            </ul>
+        </nav>
+        <div class="header__button">
+            <a class="login" href="{{ path(register) }}">Entrar</a>
+        </div>
+    </header>
+
+    {# CONTENIDO #}
+    <main class="main">
+        <div class="main__container">
+            <div class="main__container__title">
+                <h2><span>Servicios profesionales</span></h2>
+                <h2>a un solo clic</h2>
+            </div>
+            <div class="main__container__search">
+                <form class="form__search" action="">
+                    <input type="text" placeholder="¿Qué necesitas?">
+                    <button type="submit">Buscar</button>
+                </form>
+            </div>
+        </div>
+        <section class="most-popular">
+            {% for specialist in specialists %}
+                <div class="card-item">
+                    <figure>
+                        <img src="{{ specialist.image }}" alt="imagen">
+                        <figcaption>imagen{{ specialist._id }}</figcaption>
+                    </figure>
+                </div>
+            {% endfor %}
+{#             
+            <div class="card-item">
+                <figure>
+                    <img src="" alt="imagen">
+                    <figcaption>imagen1</figcaption>
+                </figure>
+            </div>
+            <div class="card-item">
+                <figure>
+                    <img src="" alt="imagen">
+                    <figcaption>imagen1</figcaption>
+                </figure>
+            </div>
+            <div class="card-item">
+                <figure>
+                    <img src="" alt="imagen">
+                    <figcaption>imagen1</figcaption>
+                </figure>
+            </div>
+            <div class="card-item">
+                <figure>
+                    <img src="" alt="imagen">
+                    <figcaption>imagen1</figcaption>
+                </figure>
+            </div>
+            <div class="card-item">
+                <figure>
+                    <img src="" alt="imagen">
+                    <figcaption>imagen1</figcaption>
+                </figure>
+            </div> #}
+        </section>
+    </main>
+
+    {# FOOTER #}
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__container__logo">
+                <img src="/assets/images/logo-light.png" alt="logo">
+            </div>
+            <div class="footer__container__nav">
+                <ul>
+                    <li><a href="#">A</a></li>
+                    <li><a href="#">B</a></li>
+                    <li><a href="#">C</a></li>
+                    <li><a href="#">D</a></li>
+                    <li><a href="#">E</a></li>
+                </ul>
+            </div>
+            <div class="footer__container__social">
+                <ul>
+                    <li><a href="#"><i class="fab fa-facebook-square"></i>FACEBOOK</a></li>
+                    <li><a href="#"><i class="fab fa-twitter-square"></i>TWITTER</a></li>
+                    <li><a href="#"><i class="fab fa-instagram-square"></i>INSTAGRAM</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

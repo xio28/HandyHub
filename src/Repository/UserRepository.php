@@ -5,7 +5,7 @@ use App\Document\UsersDocument;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 
-class UsersRepository
+class UserRepository
 {
     private $documentManager;
 
@@ -21,7 +21,7 @@ class UsersRepository
 
     public function findUserById(int $id): ?UsersDocument
     {
-        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['_id' => $id]);
+        return $this->documentManager->getRepository(UsersDocument::class)->find($id);
     }
 
     public function findUserByEmail(string $email): ?UsersDocument
@@ -41,6 +41,11 @@ class UsersRepository
         $user = $this->findUserByEmail($email);
 
         return $user ? $user->getRole() : null;
+    }
+
+    public function getUsersByRole(string $role): ?string
+    {
+        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['role' => $role]);
     }
 
     // Otros métodos personalizados aquí...

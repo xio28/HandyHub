@@ -17,6 +17,14 @@
         "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_internals_defi-a5d8e3.js",
         "/build/form.js"
       ]
+    },
+    "index": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/index.css"
+      ]
     }
   }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\UserService;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
 {
@@ -14,9 +17,14 @@ class UserController extends AbstractController
     public function registerClient(Request $request, UserService $userService)
     {
         if ($request->isMethod('POST')) {
-            $userService->registerClient($request);
-            // Aquí puedes redirigir al usuario a una página de éxito o simplemente devolver una respuesta 200.
-            return new Response('Usuario registrado con éxito.', 200);
+            $success = $userService->registerClient($request);
+            
+            if ($success) {
+                return $this->redirectToRoute('app_index');
+            } else {
+                throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
+            }
+            // return new RedirectResponse('Usuario registrado con éxito.', 200);
         } 
 
         return $this->render('register/register.html.twig', [
@@ -55,6 +63,16 @@ class UserController extends AbstractController
     {
         return $this->render('forms/get_users.html.twig', [
             'users' => $userService->getUsers()
+        ]);
+    }
+    
+    /**
+     * @Route("/get/specialists", name="app_get_specialists")
+     */
+    public function getSpecialists(UserRepository $UserRepository)
+    {
+        return $this->render('forms/get_users.html.twig', [
+            'specialists' => $UserRepository->getUsersByRole('ROLE_SPECIALIST')
         ]);
     }
 }

@@ -8,32 +8,35 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class UserService {
     private $documentManager;
-    private $passwordEncoder;
     private $validator;
     private $logger;
     private $emailService;
     private $router;
+    private $passwordHasher;
+    private $publicDirectory;
 
     public function __construct(
         DocumentManager $documentManager, 
-        UserPasswordEncoderInterface $passwordEncoder,
         ValidatorInterface $validator,
         LoggerInterface $logger,
         EmailService $emailService,
-        UrlGeneratorInterface $router
+        UrlGeneratorInterface $router,
+        UserPasswordHasherInterface $passwordHasher,
+        string $publicDirectory
     ) {
         $this->documentManager = $documentManager;
-        $this->passwordEncoder = $passwordEncoder;
         $this->validator = $validator;
         $this->logger = $logger;
         $this->emailService = $emailService;
         $this->router = $router;
+        $this->passwordHasher = $passwordHasher;
+        $this->publicDirectory = $publicDirectory;
     }
 
     public function registerClient(Request $request)
@@ -48,39 +51,52 @@ class UserService {
             $user->setAddress($request->get('address'));
             $user->setTelephone($request->get('telephone'));
             $user->setRole(RolesConstants::ROLE_CLIENT);
-            $user->setImage($request->get('image'));
+
+            $image = $request->files->get('image');
+            $dir = $this->publicDirectory;
+            $resourcesPath = '/resources/images/users/';
+
+            if($image) {
+                $fileName = 'client_' . $user->getId() . '.' . $image->getClientOriginalExtension();
+                $image->move($dir . $resourcesPath, $fileName);
+                $user->setImage($resourcesPath . $fileName);
+            } else {
+                $user->setImage($resourcesPath . 'commonPic.jpg');
+            }
 
             $creditCardInfo = [
-                'number' => $request->get('credit_card_number'),
-                'name' => $request->get('credit_card_name'),
-                'expiry' => $request->get('credit_card_expiry'),
-                'cvv' => $request->get('credit_card_cvv'),
+                'number' => $request->get('creditNumber'),
+                'name' => $request->get('creditName'),
+                'expiry' => $request->get('creditExpire'),
+                'cvv' => $request->get('creditCvv'),
             ];
             $user->setCreditCard($creditCardInfo);
-            $user->setPolicy($request->get('policy'));
+            $user->setPolicy($request->get('privacy'));
 
             $user->setIsVerfied($user->getIsVerified());
             // ... establecer los otros campos aquí
-    
+
             // Validar los datos del usuario
             // $errors = $this->validator->validate($user);
-    
+
             // if (count($errors) > 0) {
             //     $errorsString = (string) $errors;
 
             //     return new Response($errorsString);
             // }
-    
+
             // Persistir el nuevo usuario
             $this->documentManager->persist($user);
             $this->documentManager->flush();
 
             $verificationLink = $this->router->generate('app_verify_email', ['id' => $user->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
+            $this->logger->info('User '. $user->getId(). ' registered successfully');
             $this->emailService->sendVerificationEmail($user->getEmail(), $verificationLink);
 
+            return true;
         } catch(Exception $e) {
-            $this->logger->error('Error al registrar al usuario: ' . $e->getMessage());
+            $this->logger->error('User register failed: ' . $e->getMessage());
             return new Response('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -107,7 +123,13 @@ class UserService {
 
     private function hashPassword(string $password, UsersDocument $user): string
     {
-        return $this->passwordEncoder->encodePassword($user, $password);
+        return $this->passwordHasher->hashPassword($user, $password);
     }
+
+    public function checkPassword(string $password, UsersDocument $user): bool
+    {
+        return $this->passwordHasher->isPasswordValid($user, $password);
+    }
+
 }
 ?>

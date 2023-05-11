@@ -20,7 +20,7 @@ class EmailService
             ->from('admin@handyhubteam.com')
             ->to($to)
             ->subject('Verificación de correo electrónico')
-            ->text('Por favor, verifica tu correo electrónico haciendo clic en el siguiente enlace: ' . $verificationLink);
+            ->html('<p>Por favor, verifica tu correo electrónico haciendo clic en el siguiente enlace: <a href="' . $verificationLink . '">verificar</a></p>');
 
         $this->mailer->send($email);
     }
