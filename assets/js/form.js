@@ -1,12 +1,11 @@
 // import JQuery library
-// import $ from 'jquery';
+import $ from 'jquery';
 
-$emailExists = false;
+let emailExists = false;
 
 $(document).ready(function() {
-    // Llama a la API para obtener las categorías
     $.ajax({
-        url: '/get/categories', // Reemplaza con la URL de tu controlador que devuelve las categorías
+        url: '/get/categories',
         method: 'GET',
         success: function(response) {
             // Llena el campo de selección con las categorías
@@ -21,16 +20,20 @@ $(document).ready(function() {
     $('#email').on('input', function() {
         var email = $(this).val();
         $.ajax({
-            url: '/check_email', // Reemplaza con la URL de tu controlador que verifica el email
+            url: '/check/email',
             method: 'POST',
-            data: {email: email},
+            data: JSON.stringify({email: email}),
             success: function(response) {
                 if (response.exists) {
-                    $emailExists = true;
+                    emailExists = true;
                     $('#email-error').text('El email ya existe en la base de datos');
                 } else {
+                    emailExists = false;
                     $('#email-error').text('');
                 }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error: " + textStatus, errorThrown);
             }
         });
     });

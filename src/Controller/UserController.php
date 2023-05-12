@@ -6,6 +6,7 @@ use App\Service\UserService;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -37,25 +38,22 @@ class UserController extends AbstractController
      */
     public function registerSpecialist(Request $request)
     {
-        $form = $this->createForm(ClientType::class);
+        if ($request->isMethod('POST')) {
+            $success = $userService->registerSpecialist($request);
+            
+            if ($success) {
+                return $this->redirectToRoute('app_index');
+            } else {
+                throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
+            }
+            // return new RedirectResponse('Usuario registrado con éxito.', 200);
+        } 
 
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Obtén los datos del formulario
-            $clientData = $form->getData();
-
-            // Realiza las acciones necesarias para registrar al cliente
-            // (por ejemplo, crea una instancia del UserDocument, asigna el role 'client', guarda en la base de datos)
-
-            // Redirige a la página de éxito o realiza otra acción
-            return $this->redirectToRoute('registration_success');
-        }
-
-        return $this->render('forms/client_register.html.twig', [
-            'form' => $form->createView(),
+        return $this->render('register/register.html.twig', [
+            'controllerName' => 'app_specialist_register'
         ]);
     }
-    
+
     /**
      * @Route("/get/users", name="app_get_users")
      */
@@ -69,10 +67,10 @@ class UserController extends AbstractController
     /**
      * @Route("/get/specialists", name="app_get_specialists")
      */
-    public function getSpecialists(UserRepository $UserRepository)
+    public function getSpecialists(UserRepository $userRepository)
     {
         return $this->render('forms/get_users.html.twig', [
-            'specialists' => $UserRepository->getUsersByRole('ROLE_SPECIALIST')
+            'specialists' => $userRepository->getUsersByRole('ROLE_SPECIALIST')
         ]);
     }
 }
