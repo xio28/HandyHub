@@ -1,77 +1,54 @@
 <?php
+
 namespace App\Repository;
 
 use App\Document\UsersDocument;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
-use Psr\Log\LoggerInterface;
 
-class UserRepository extends DocumentRepository
+class UserRepository
 {
-    private $logger;
+    private $documentManager;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(DocumentManager $documentManager)
     {
-        $this->logger = $logger;
+        $this->documentManager = $documentManager;
     }
 
-    public function getAll(): ?array
+    public function getAll(): ?UsersDocument
     {
-        try {
-            return $this->findAll();
-        }  catch (MongoDBException $e) {
-            $logger->error('Internal error while interacting with MongoDB: '.$e->getMessage());
-        }
+        return $this->documentManager->getRepository(UsersDocument::class)->findAll();
     }
 
     public function findUserById(int $id): ?UsersDocument
     {
-        try {
-            return $this->find($id);
-        }  catch (MongoDBException $e) {
-            $logger->error('Internal error while interacting with MongoDB: '.$e->getMessage());
-        }
+        return $this->documentManager->getRepository(UsersDocument::class)->find($id);
     }
 
     public function findUserByEmail(string $email): ?UsersDocument
     {
-        try {
-            return $this->findOneBy(['email' => $email]);
-        }  catch (MongoDBException $e) {
-            $logger->error('Internal error while interacting with MongoDB: '.$e->getMessage());
-        }
+        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['email' => $email]);
     }
 
     public function getIdByEmail(string $email): ?string
     {
-        try {
-            $user = $this->findUserByEmail($email);
+        $user = $this->findUserByEmail($email);
 
-            return $user ? $user->getId() : null;
-        }  catch (MongoDBException $e) {
-            $logger->error('Internal error while interacting with MongoDB: '.$e->getMessage());
-        }
+        return $user ? $user->getId() : null;
     }
 
     public function getRoleByEmail(string $email): ?string
     {
-        try {
-            $user = $this->findUserByEmail($email);
+        $user = $this->findUserByEmail($email);
 
-            return $user ? $user->getRole() : null;
-        }  catch (MongoDBException $e) {
-            $logger->error('Internal error while interacting with MongoDB: '.$e->getMessage());
-        }
+        return $user ? $user->getRole() : null;
     }
 
-    public function getUsersByRole(string $role): ?array
+    public function getUsersByRole(string $role): ?string
     {
-        try {
-            return $this->findBy(['role' => $role]);
-        }  catch (MongoDBException $e) {
-            $logger->error('Internal error while interacting with MongoDB: '.$e->getMessage());
-        }
+        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['role' => $role]);
     }
+
 }
 
 ?>

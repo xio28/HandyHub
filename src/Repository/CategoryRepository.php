@@ -4,9 +4,8 @@ namespace App\Repository;
 
 use App\Document\CategoriesDocument;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
-class CategoryRepository extends DocumentRepository
+class CategoryRepository
 {
     private $documentManager;
 
