@@ -29,6 +29,3 @@ services:
     App\Service\UserService:
         arguments:
             $publicDirectory: '%public_directory%'
-
-    doctrine_mongodb:
-        alias: doctrine_mongodb
