@@ -81,7 +81,7 @@ class UserService {
             $user->setCreditCard($creditCardInfo);
             $user->setPolicy($request->get('privacy'));
 
-            $user->setIsVerfied($user->getIsVerified());
+            $user->setIsVerified($user->getIsVerified());
             // ... establecer los otros campos aquí
 
             // Validar los datos del usuario
