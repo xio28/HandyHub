@@ -4,18 +4,18 @@ import $ from 'jquery';
 let emailExists = false;
 
 $(document).ready(function() {
-    $.ajax({
-        url: '/get/categories',
-        method: 'GET',
-        success: function(response) {
-            // Llena el campo de selección con las categorías
-            var select = $('#category-select');
-            select.empty();
-            response.categories.forEach(function(category) {
-                select.append('<option value="' + category.id + '">' + category.name + '</option>');
-            });
-        }
-    });
+    // $.ajax({
+    //     url: '/get/categories',
+    //     method: 'GET',
+    //     success: function(response) {
+    //         // Llena el campo de selección con las categorías
+    //         var select = $('#category-select');
+    //         select.empty();
+    //         response.categories.forEach(function(category) {
+    //             select.append('<option value="' + category.id + '">' + category.name + '</option>');
+    //         });
+    //     }
+    // });
 
     $('#email').on('input', function() {
         var email = $(this).val();
