@@ -2,12 +2,13 @@
 namespace App\Service;
 
 use App\Document\CategoriesDocument;
+use App\Service\CategoryService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 
-class UserService {
+class CategoryService {
     private $documentManager;
     private $logger;
     private $publicDirectory;

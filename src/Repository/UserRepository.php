@@ -2,31 +2,34 @@
 namespace App\Repository;
 
 use App\Document\UsersDocument;
-use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Psr\Log\LoggerInterface;
 
-class UserRepository
+class UserRepository extends DocumentRepository
 {
-    private $documentManager;
-
-    public function __construct(DocumentManager $documentManager)
+    
+    public function getAll(): ?array
     {
-        $this->documentManager = $documentManager;
-    }
-
-    public function getAll(): ?UsersDocument
-    {
-        return $this->documentManager->getRepository(UsersDocument::class)->findAll();
+        try {
+            return $this->findAll();
+        }  catch (MongoDBException $e) {
+            $logger->error('Error al interactuar con MongoDB: '.$e->getMessage());
+        }
     }
 
     public function findUserById(int $id): ?UsersDocument
     {
-        return $this->documentManager->getRepository(UsersDocument::class)->find($id);
+        try {
+            return $this->find($id);
+        }  catch (MongoDBException $e) {
+            $logger->error('Error al interactuar con MongoDB: '.$e->getMessage());
+        }
     }
 
     public function findUserByEmail(string $email): ?UsersDocument
     {
-        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['email' => $email]);
+        return $this->findOneBy(['email' => $email]);
     }
 
     public function getIdByEmail(string $email): ?string
@@ -43,12 +46,10 @@ class UserRepository
         return $user ? $user->getRole() : null;
     }
 
-    public function getUsersByRole(string $role): ?string
+    public function getUsersByRole(string $role): ?array
     {
-        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['role' => $role]);
+        return $this->findBy(['role' => $role]);
     }
-
-    // Otros métodos personalizados aquí...
 }
 
 ?>
