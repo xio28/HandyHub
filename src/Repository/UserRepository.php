@@ -8,7 +8,6 @@ use Psr\Log\LoggerInterface;
 
 class UserRepository extends DocumentRepository
 {
-
     private $logger;
 
     public function __construct(LoggerInterface $logger)
