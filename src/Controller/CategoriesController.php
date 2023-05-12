@@ -13,9 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CategoriesController extends AbstractController
 {
     /**
-     * @Route("/register/client", name="app_client_register")
+     * @Route("/get/categories", name="app_get_categories")
      */
-    public function registerClient(Request $request, UserService $userService)
+    public function getCategories(Request $request, UserService $userService)
     {
         if ($request->isMethod('POST')) {
             $success = $userService->registerClient($request);

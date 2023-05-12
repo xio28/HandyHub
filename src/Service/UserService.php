@@ -20,7 +20,7 @@ class UserService {
     private $emailService;
     private $router;
     private $passwordHasher;
-    private $UserRepository;
+    private $userRepository;
     private $publicDirectory;
 
     public function __construct(
@@ -30,7 +30,7 @@ class UserService {
         EmailService $emailService,
         UrlGeneratorInterface $router,
         UserPasswordHasherInterface $passwordHasher,
-        UserRepository $UserRepository,
+        UserRepository $userRepository,
         string $publicDirectory
     ) {
         $this->documentManager = $documentManager;
@@ -39,7 +39,7 @@ class UserService {
         $this->emailService = $emailService;
         $this->router = $router;
         $this->passwordHasher = $passwordHasher;
-        $this->userRepository = $UserRepository;
+        $this->userRepository = $userRepository;
         $this->publicDirectory = $publicDirectory;
     }
 
