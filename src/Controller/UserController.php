@@ -25,7 +25,6 @@ class UserController extends AbstractController
             } else {
                 throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
             }
-            // return new RedirectResponse('Usuario registrado con éxito.', 200);
         } 
 
         return $this->render('register/register.html.twig', [
@@ -46,7 +45,6 @@ class UserController extends AbstractController
             } else {
                 throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
             }
-            // return new RedirectResponse('Usuario registrado con éxito.', 200);
         } 
 
         return $this->render('register/register.html.twig', [
@@ -63,7 +61,7 @@ class UserController extends AbstractController
             'users' => $userService->getUsers()
         ]);
     }
-    
+
     /**
      * @Route("/get/specialists", name="app_get_specialists")
      */

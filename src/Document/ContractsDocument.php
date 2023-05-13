@@ -43,7 +43,22 @@ class ContractsDocument
     /**
      * @MongoDB\Field(type="float")
      */
-    protected $price;
+    protected $min_price;
+
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    protected $tax = 0.07;
+
+    /**
+     * @MongoDB\Field(type="float")
+     */
+    protected $total_price;
+
+    /**
+     * @MongoDB\Field(type="bool")
+     */
+    protected $available = true;
 
     // Agrega getters y setters para cada propiedad aquí.
 }

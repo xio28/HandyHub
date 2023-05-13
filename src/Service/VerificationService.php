@@ -13,7 +13,7 @@ class VerificationService
     private $logger;
 
     public function __construct(UserRepository $userRepository, DocumentManager $documentManager, LoggerInterface $logger) {
-        $this->userRepository = $documentManager->getRepository(UsersDocument::class);
+        $this->userRepository = $userRepository;
         $this->documentManager = $documentManager;
         $this->logger = $logger;
     }

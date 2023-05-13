@@ -1,3 +1,10 @@
+{# Mensaje "flash" en caso de que se produzca algún evento #}
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+{% endfor %}
+
 <form method="POST" action="{{ path( actionPath ) }}" enctype="multipart/form-data" id="form">
     <div>
         <label for="nombre">Nombre:</label>
@@ -29,3 +36,4 @@
         <input type="submit" name="submit" value="Enviar">
     </div>
 </form>
+

@@ -46,6 +46,8 @@ class UserService {
     public function registerClient(Request $request)
     {
         try {
+            $this->documentManager->beginTransaction();
+
             $user = new UsersDocument();
 
             if ($this->checkEmail($request->get('email'))) {
@@ -60,6 +62,20 @@ class UserService {
             $user->setTelephone($request->get('telephone'));
             $user->setRole(RolesConstants::ROLE_CLIENT);
 
+            $creditCardInfo = [
+                'number' => $request->get('creditNumber'),
+                'name' => $request->get('creditName'),
+                'expiry' => $request->get('creditExpire'),
+                'cvv' => $request->get('creditCvv'),
+            ];
+            $user->setCreditCard($creditCardInfo);
+            $user->setPolicy($request->get('privacy'));
+
+            $user->setIsVerified($user->getIsVerified());
+
+            $this->documentManager->persist($user);
+            $this->documentManager->flush();
+
             $image = $request->files->get('image');
             $dir = $this->publicDirectory;
             $resourcesPath = '/resources/images/users/';
@@ -72,28 +88,6 @@ class UserService {
                 $user->setImage($resourcesPath . 'commonPic.jpg');
             }
 
-            $creditCardInfo = [
-                'number' => $request->get('creditNumber'),
-                'name' => $request->get('creditName'),
-                'expiry' => $request->get('creditExpire'),
-                'cvv' => $request->get('creditCvv'),
-            ];
-            $user->setCreditCard($creditCardInfo);
-            $user->setPolicy($request->get('privacy'));
-
-            $user->setIsVerified($user->getIsVerified());
-            // ... establecer los otros campos aquí
-
-            // Validar los datos del usuario
-            // $errors = $this->validator->validate($user);
-
-            // if (count($errors) > 0) {
-            //     $errorsString = (string) $errors;
-
-            //     return new Response($errorsString);
-            // }
-
-            // Persistir el nuevo usuario
             $this->documentManager->persist($user);
             $this->documentManager->flush();
 
@@ -102,8 +96,12 @@ class UserService {
             $this->logger->info('User '. $user->getId(). ' registered successfully');
             $this->emailService->sendVerificationEmail($user->getEmail(), $verificationLink);
 
+            $this->documentManager->commit();
+
             return true;
+            
         } catch(Exception $e) {
+            $this->documentManager->rollback();
             $this->logger->error('User register failed: ' . $e->getMessage());
             return new Response('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -141,16 +139,12 @@ class UserService {
             $user->setPolicy($request->get('privacy'));
 
             $user->setIsVerfied($user->getIsVerified());
-            // ... establecer los otros campos aquí
 
-            // Validar los datos del usuario
-            // $errors = $this->validator->validate($user);
-
-            // if (count($errors) > 0) {
-            //     $errorsString = (string) $errors;
-
-            //     return new Response($errorsString);
-            // }
+            if (count($errors) > 0) {
+                $errorsString = (string) $errors;
+            
+                throw new \Exception($errorsString);
+            }
 
             // Persistir el nuevo usuario
             $this->documentManager->persist($user);
