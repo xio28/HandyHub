@@ -6,10 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MainController extends AbstractController
+class PanelController extends AbstractController
 {
     /**
-     * @Route("/panel/admin", name="app_index")
+     * @Route("/panel/admin", name="app_admin_panel")
      */
     public function panelAdmin(): Response
     {
@@ -17,7 +17,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/panel/client", name="app_services")
+     * @Route("/panel/client", name="app_client_panel")
      */
     public function panelClient(): Response
     {
@@ -25,7 +25,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/panel/specialist", name="app_about")
+     * @Route("/panel/specialist", name="app_specialist_panel")
      */
     public function panelSpecialist(): Response
     {

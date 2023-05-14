@@ -46,9 +46,9 @@ class UsersDocument implements UserInterface {
     private $telephone;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="collection")
      */
-    private $role;
+    private $roles = [];
 
     /**
      * @MongoDB\ReferenceOne(targetDocument="CategoriesDocument", storeAs="id")
@@ -150,14 +150,18 @@ class UsersDocument implements UserInterface {
         $this->telephone = $telephone;
     }
 
-    public function getRole(): string
+    public function getRoles(): array
     {
-        return $this->role;
+        $roles = $this->roles;
+
+        return array_unique($roles);
     }
 
-    public function setRole(string $role)
+    public function setRoles(array $roles): self
     {
-        $this->role = $role;
+        $this->roles = $roles;
+
+        return $this;
     }
 
     public function getCategory(): CategoriesDocument
@@ -234,11 +238,6 @@ class UsersDocument implements UserInterface {
     public function getUsername(): string
     {
         return $this->email;
-    }
-
-    public function getRoles(): array
-    {
-        return [$this->role];
     }
 
     public function getSalt(): ?string

@@ -68,7 +68,7 @@ class UserController extends AbstractController
     public function getSpecialists(UserRepository $userRepository)
     {
         return $this->render('forms/get_users.html.twig', [
-            'specialists' => $userRepository->getUsersByRole('ROLE_SPECIALIST')
+            'specialists' => $userRepository->getUsersByRole(['ROLE_SPECIALIST'])
         ]);
     }
 }

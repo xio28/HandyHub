@@ -37,17 +37,17 @@ class UserRepository
         return $user ? $user->getId() : null;
     }
 
-    public function getRoleByEmail(string $email): ?string
-    {
-        $user = $this->findUserByEmail($email);
+    // public function getRoleByEmail(string $email): ?array
+    // {
+    //     $user = $this->findUserByEmail($email);
+    
+    //     return $user ? $user->getRoles() : null;
+    // }
 
-        return $user ? $user->getRole() : null;
-    }
-
-    public function getUsersByRole(string $role): ?string
-    {
-        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['role' => $role]);
-    }
+    // public function getUsersByRole(string $role): ?array
+    // {
+    //     return $this->documentManager->getRepository(UsersDocument::class)->findBy(['roles' => $role]);
+    // }
 
 }
 
