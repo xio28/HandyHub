@@ -10,6 +10,8 @@ import './styles/app.css';
 
 // import JQuery library
 import $ from 'jquery';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
 
 // start the Stimulus application
 import './bootstrap';

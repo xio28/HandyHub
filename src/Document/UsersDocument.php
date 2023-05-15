@@ -53,7 +53,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument=CategoriesDocument::class)
+     * @MongoDB\ReferenceOne(targetDocument=CategoriesDocument::class, storeAs="id")
      */
     private $category;
 
@@ -187,7 +187,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->category;
     }
 
-    public function setCategory(CategoriesDocument $category)
+    public function setCategory(?CategoriesDocument $category)
     {
         $this->category = $category;
     }

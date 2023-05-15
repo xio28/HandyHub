@@ -9,7 +9,41 @@ use App\Service\InvoiceGenerator;
 class ContractController extends AbstractController
 {
     /**
-     * @Route("/contract/{id}/finalize", name="contract_finalize")
+     * @Route("/start/contract", name="contract_start")
+     */
+    public function startContract()
+    {
+        return $this->render('contract/start_contract.html.twig', [
+            'info' => $this->getInfo(),
+        ]);
+    }
+    
+    /**
+     * @Route("/accept/contract", name="contract_accept")
+     */
+    public function acceptContract()
+    {
+        
+
+        return $this->render('contract/accept_contract.html.twig', [
+            'info' => $this->getInfo(),
+        ]);
+    }
+
+    /**
+     * @Route("/reject/contract", name="contract_reject")
+     */
+    public function rejectContract()
+    {
+        
+
+        return $this->render('contract/reject_contract.html.twig', [
+            'info' => $this->getInfo(),
+        ]);
+    }
+
+    /**
+     * @Route("/finish/contract/{id}", name="contract_finish")
      */
     public function finalize($id, InvoiceGenerator $invoiceGenerator): Response
     {

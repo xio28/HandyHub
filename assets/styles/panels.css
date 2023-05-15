@@ -130,13 +130,21 @@ input {
 }
 
 .edit-user,
-.edit-category {
+.edit-category,
+.edit-contract {
     background-color: #ffc107;
 }
 
 .trash-user,
-.trash-category {
+.trash-category,
+.trash-contract {
     background-color: #d9534f;
+}
+
+.check-user,
+.check-category,
+.check-contract {
+    background-color: #5cb85c;
 }
 
 .btn:hover {

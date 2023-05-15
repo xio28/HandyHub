@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}HandyHub | Inicio{% endblock %}
+
 {% block stylesheets %}
     {{ encore_entry_link_tags('panels-css') }}
     {{ encore_entry_link_tags('table') }}
@@ -150,7 +152,55 @@
                 </div>
             </div>
             <div id="content-contracts-page" class="page">
-                <h1>Adios</h1>
+                <div class="card">
+                    <table class="collapse">
+                        <caption>Contracts</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Contract ID</th>
+                                <th scope="col">Client ID</th>
+                                <th scope="col">Specialist ID</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Start hour</th>
+                                <th scope="col">End hour</th>
+                                <th scope="col">Price per hour</th>
+                                <th scope="col">Taxes</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Status</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td data-label="ID">{{ user.id }}</td>
+                                <td data-label="Name">{{ user.name }}</td>
+                                <td data-label="Surname">{{ user.surname }}</td>
+                                <td data-label="Email">{{ user.email }}</td>
+                                <td data-label="Email">{{ user.email }}</td>
+                                <td data-label="Email">{{ user.email }}</td>
+                                <td data-label="Email">{{ user.email }}</td>
+                                <td data-label="Email">{{ user.email }}</td>
+                                <td data-label="Roles">{{ user.roles|first }}</td>
+                                <td data-label="Verified"></td>
+                                <td data-label="">
+                                    {# {% if contract.status %} #}
+                                        <button class="btn edit-contract">
+                                            <span class="material-icons">thumb_up</span>
+                                        </button>
+                                        <button class="btn trash-contract" data-id="{#{{ user.id }}#}">
+                                            <span class="material-icons">thumb_down_alt</span>
+                                        </button>
+                                        <button class="btn check-contract">
+                                            <span class="material-icons">done_all</span>
+                                        </button>
+                                    {# {% endif %} #}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

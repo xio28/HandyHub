@@ -16,6 +16,15 @@
     {# CABECERA #}
     {{ parent() }}
 
+    {# {% set flashMessages = app.flashes('success') %}
+    {% if flashMessages|length > 0 %}
+        <script>
+            $(document).ready(function() {
+                toastr.success('{{ flashMessages[0]|raw }}');
+            });
+        </script>
+    {% endif %} #}
+
     {# CONTENIDO #}
     <main class="main">
         <div class="main__container">
@@ -33,44 +42,16 @@
     </main>
 
     <main class="professionals">
-        <h2 class="professionals__h2">Nuestros profesionales, nuestra clave</h2>
+        <h2 class="professionals__h2">Nuestros profesionales <span style="color: var(--red-color)">|</span> nuestra clave</h2>
         <section class="most-popular">
-            <div class="card-item">
-                <figure>
-                    <img src="{{ asset('resources/images/users/person-1.jpg') }}" alt="imagen">
-                    <figcaption>imagen1</figcaption>
-                </figure>
-            </div>
-            <div class="card-item">
-                <figure>
-                    <img src="{{ asset('resources/images/users/person-2.jpg') }}" alt="imagen">
-                    <figcaption>imagen2</figcaption>
-                </figure>
-            </div>
-            <div class="card-item">
-                <figure>
-                    <img src="{{ asset('resources/images/users/person-3.jpg') }}" alt="imagen">
-                    <figcaption>imagen3</figcaption>
-                </figure>
-            </div>
-            <div class="card-item">
-                <figure>
-                    <img src="{{ asset('resources/images/users/person-4.jpg') }}" alt="imagen">
-                    <figcaption>imagen4</figcaption>
-                </figure>
-            </div>
-            <div class="card-item">
-                <figure>
-                    <img src="{{ asset('resources/images/users/person-5.jpg') }}" alt="imagen">
-                    <figcaption>imagen5</figcaption>
-                </figure>
-            </div>
-            <div class="card-item last-person">
-                <figure>
-                    <img src="{{ asset('resources/images/users/person-6.jpg') }}" alt="imagen">
-                    <figcaption>imagen6</figcaption>
-                </figure>
-            </div>
+            {% for specialist in specialists_images %}
+                <div class="card-item">
+                    <figure>
+                        <img src="{{ asset(specialist.getImage()) }}" alt="imagen">
+                        <figcaption>imagen1</figcaption>
+                    </figure>
+                </div>
+            {% endfor %}
         </section>
     </main>
 

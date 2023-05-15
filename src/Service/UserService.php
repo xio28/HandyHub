@@ -110,12 +110,11 @@ class UserService {
     {
         try {
             $user = new UsersDocument();
-            
-
+    
             if ($this->checkEmail($request->get('email'))) {
                 throw new \Exception('Email is in use.');
             }
-
+    
             $user->setEmail($request->get('email'));
             $user->setPassword($this->hashPassword($request->get('password'), $user));
             $user->setName($request->get('name'));
@@ -124,47 +123,47 @@ class UserService {
             $user->setRoles([RolesConstants::ROLE_SPECIALIST]);
             $user->setCurrentAccount($request->get('current_account'));
             $user->setPricePerHour($request->get('price_per_hour'));
-
+    
             $categoryId = $request->get('category');
-
+    
             $category = $this->categoryRepository->findCategoryById($categoryId);
-            var_dump($category);
+    
             if ($category === null) {
                 throw new \Exception('Invalid category ID.');
             }
-
+    
             $user->setCategory($category);
-
+    
             $user->setPolicy($request->get('privacy'));
-
+    
             $user->setIsVerified($user->getIsVerified());
-
+    
             $this->documentManager->persist($user);
             $this->documentManager->flush();
-
+    
             $image = $request->files->get('image');
             $dir = $this->publicDirectory;
             $resourcesPath = '/resources/images/users/';
-
-            if($image) {
+    
+            if ($image) {
                 $fileName = 'specialist_' . $user->getId() . '.' . $image->getClientOriginalExtension();
                 $image->move($dir . $resourcesPath, $fileName);
                 $user->setImage($resourcesPath . $fileName);
             } else {
                 $user->setImage($resourcesPath . 'commonPic.jpg');
             }
-
+    
             $this->documentManager->persist($user);
             $this->documentManager->flush();
-
+    
             $verificationLink = $this->router->generate('app_verify_email', ['id' => $user->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-
-            $this->logger->info('User '. $user->getId(). ' registered successfully');
+    
+            $this->logger->info('User ' . $user->getId() . ' registered successfully');
             $this->emailService->sendVerificationEmail($user->getEmail(), $verificationLink);
-
+    
             return true;
-            
-        } catch(Exception $e) {
+    
+        } catch (Exception $e) {
             $this->logger->error('User register failed: ' . $e->getMessage());
             return new Response('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
