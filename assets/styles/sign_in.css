@@ -1,0 +1,143 @@
+@import 'reset.css';
+
+.principal {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
+    background: #d0021b;
+    background: -webkit-linear-gradient(52deg, #d0021b 0%, #304140 50%, #c8b5ae 100%);
+    background: linear-gradient(52deg, #d0021b 0%, #304140 50%, #c8b5ae 100%);
+}
+
+.login {
+    width: 30%;
+    color: var(--second-color);
+}
+
+.login__title {
+    font-size: calc(1.2rem + 1.2vw);
+    color: var(--main-color);
+    padding: .8em .8em .8em 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+}
+
+.login__form-label {
+    font-size: calc(.4rem + .8vw);
+    color: var(--main-font);
+    padding: .2em;
+}
+
+.login__form-group input {
+    width: 100%;
+    font-size: calc(.5rem + .8vw);
+    margin: .5em 0;
+    padding: .5em;
+    border: none;
+    border-radius: .2em;
+    background-color: #f2f2f2;
+    color: var(--main-color);
+    -webkit-border-radius: .2em;
+    -moz-border-radius: .2em;
+    -ms-border-radius: .2em;
+    -o-border-radius: .2em;
+    border-radius: .2em;
+    outline: none;
+}
+
+.login__form-group > .login__form-button {
+    text-align: center;
+}
+
+.login__form-button {
+    width: 50%;
+    font-size: calc(.5rem + .8vw);
+    margin: .8em 0;
+    padding: .5em;
+    border: none;
+    border-radius: .2em;
+    background-color: var(--main-color);
+    color: var(--second-color);
+    -webkit-border-radius: .2em;
+    -moz-border-radius: .2em;
+    -ms-border-radius: .2em;
+    -o-border-radius: .2em;
+    border-radius: .2em;
+    cursor: pointer;
+}
+
+.login__form-button:hover {
+    background-color: var(--red-color);
+    color: var(--second-color);
+    -moz-transition: all .5s ease-in-out;
+    -ms-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    -webkit-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+
+.register {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+}
+
+.register__title {
+    font-size: calc(1rem + 1vw);
+    color: var(--second-color);
+}
+
+.register__title span {
+    width: 100%;
+    display: block;
+    font-size: calc(2.6rem + 1.1vw);
+    color: var(--main-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+}
+
+.buttons-choice__h2 {
+    font-size: calc(.5rem + .8vw);
+    color: var(--second-color);
+}
+
+.buttons-choice {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.buttons-choice__container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    gap: 3em;
+}
+
+.buttons-choice__button {
+    width: 30%;
+    font-size: calc(.5rem + .8vw);
+    text-align: center;
+    margin: .5em 0;
+    padding: .5em;
+    border: none;
+    border-radius: .2em;
+    -webkit-border-radius: .2em;
+    -moz-border-radius: .2em;
+    -ms-border-radius: .2em;
+    -o-border-radius: .2em;
+    border-radius: .2em;
+    cursor: pointer;
+}
+
+.buttons-choice__button:first-child {
+    background-color: var(--main-color);
+    color: var(--second-color);
+}
+
+.buttons-choice__button:last-child {
+    background-color: var(--red-color);
+    color: var(--second-color);
+}

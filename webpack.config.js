@@ -22,7 +22,18 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('form', './assets/js/form.js')
+    .addEntry('panels', './assets/js/panels.js')
+    .addEntry('slider-js', './assets/js/slider.js')
     .addStyleEntry('index', './assets/styles/index.css')
+    .addStyleEntry('sign_in', './assets/styles/sign_in.css')
+    .addStyleEntry('form_css', './assets/styles/form.css')
+    .addStyleEntry('services', './assets/styles/services.css')
+    .addStyleEntry('verification', './assets/styles/verification.css')
+    .addStyleEntry('404', './assets/styles/404.css')
+    .addStyleEntry('panels-css', './assets/styles/panels.css')
+    .addStyleEntry('form_contact', './assets/styles/form_contact.css')
+    .addStyleEntry('table', './assets/styles/table.css')
+    // .addStyleEntry('sm-menu', './assets/styles/menu.css')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
 

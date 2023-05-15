@@ -15,7 +15,7 @@ class UserRepository
         $this->documentManager = $documentManager;
     }
 
-    public function getAll(): ?UsersDocument
+    public function getAll(): ?array
     {
         return $this->documentManager->getRepository(UsersDocument::class)->findAll();
     }
@@ -37,17 +37,17 @@ class UserRepository
         return $user ? $user->getId() : null;
     }
 
-    // public function getRoleByEmail(string $email): ?array
-    // {
-    //     $user = $this->findUserByEmail($email);
+    public function getRoleByEmail(string $email): ?array
+    {
+        $user = $this->findUserByEmail($email);
     
-    //     return $user ? $user->getRoles() : null;
-    // }
+        return $user ? $user->getRoles() : null;
+    }
 
-    // public function getUsersByRole(string $role): ?array
-    // {
-    //     return $this->documentManager->getRepository(UsersDocument::class)->findBy(['roles' => $role]);
-    // }
+    public function getUsersByRole(string $role): ?array
+    {
+        return $this->documentManager->getRepository(UsersDocument::class)->findBy(['roles' => $role]);
+    }
 
 }
 

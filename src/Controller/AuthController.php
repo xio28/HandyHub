@@ -18,7 +18,7 @@ class AuthController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastEmail = $authenticationUtils->getLastUsername();
 
-        return $this->render('forms/login_form.html.twig', [
+        return $this->render('sign_in/sign_in.html.twig', [
             'last_email' => $lastEmail, 
             'error' => $error
         ]);

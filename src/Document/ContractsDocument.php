@@ -9,6 +9,11 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  */
 class ContractsDocument
 {
+    const STATUS_PENDING = 'pending';
+    const STATUS_IN_PROGRESS = 'in_progress';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_REJECTED = 'rejected';
+
     /**
      * @MongoDB\Id
      */
@@ -55,11 +60,12 @@ class ContractsDocument
     protected $total_price;
 
     /**
-     * @MongoDB\Field(type="bool")
+     * @MongoDB\Field(type="string")
      */
-    protected $available = true;
+    protected $status = self::STATUS_PENDING;
 
     // Agrega getters y setters para cada propiedad aquí.
 }
+
 
 ?>

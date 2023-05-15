@@ -7,6 +7,11 @@ security:
             algorithm: 'auto'
             cost: 12
 
+    # role_hierarchy:
+    #     ROLE_SUPERADMIN: [ROLE_SUPERADMIN]
+    #     ROLE_ADMIN: [ROLE_ADMIN]
+    #     ROLE_SPECIALIST: [ROLE_SPECIALIST]
+    #     ROLE_CLIENT: [ROLE_CLIENT]
 
     providers:
         users_in_memory: { memory: null }
@@ -32,31 +37,16 @@ security:
             logout:
                 path: app_logout
 
-        # admin_area:
-        #     pattern: ^/admin
-        #     provider: mongodb_provider
-        #     form_login:
-        #         login_path: app_login
-        #         check_path: app_login
-        #     logout:
-        #         path: app_logout
-
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     # access_control:
-    #     - { path: '^/admin/users', roles: ROLE_SUPER_ADMIN }
-    #     - { path: '^/admin', roles: ROLE_ADMIN }
-    #     - { path: '^/api/', roles: [ROLE_SUPERADMIN, ROLE_ADMIN] }
-    #     - { path: '^/superadmin_panel', roles: ROLE_SUPERADMIN }
-    #     - { path: '^/admin_panel', roles: ROLE_ADMIN }
-    #     - { path: '^/client_panel', roles: ROLE_CLIENT }
-    #     - { path: '^/specialist_panel', roles: ROLE_SPECIALIST }
+    #     - { path: '^/admin/', roles: [ROLE_SUPERADMIN, ROLE_ADMIN] }
+    #     - { path: '^/client_account', roles: ROLE_CLIENT }
+    #     - { path: '^/specialist_account', roles: ROLE_SPECIALIST }
 
 when@test:
     security:

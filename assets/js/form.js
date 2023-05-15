@@ -3,7 +3,7 @@ import $ from 'jquery';
 
 let emailExists = false;
 
-$(document).ready(function() {
+$(function() {
     // $.ajax({
     //     url: '/get/categories',
     //     method: 'GET',
@@ -43,8 +43,10 @@ $(document).ready(function() {
         var confirmPassword = $(this).val();
         if (password !== confirmPassword) {
             $('#password-error').text('Las contraseñas no coinciden');
+            $('#password-error-confirm').text('Las contraseñas no coinciden');
         } else {
             $('#password-error').text('');
+            $('#password-error-confirm').text('');
         }
     });
     
@@ -54,6 +56,7 @@ $(document).ready(function() {
             $('#email-error').text('El email ya existe en la base de datos');
         } else if ($('#password').val() !== $('#confirm_password').val()) {
             e.preventDefault();
+            $('#password-error').show();
             $('#password-error').text('Las contraseñas no coinciden');
         }
     });

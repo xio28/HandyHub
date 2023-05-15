@@ -15,11 +15,13 @@ class VerificationController extends AbstractController
     {
         $verified = $verification->verifyUser($id);
 
-        if ($verified) {
-            return $this->redirectToRoute('app_index');
-        } else {
-            throw new \Exception('Ha habido un error al verficar tu cuenta. Por favor, contacta con soporte.');
+        if ($response instanceof Response && $response->getStatusCode() != Response::HTTP_OK) {
+            return $this->redirectToRoute('app_error_page', ['statusCode' => 404]);
         }
+
+        return $this->render('verification/verification.html.twig', [
+            'verified' => $verified,
+        ]);
     }
 }
 

@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
@@ -50,6 +51,16 @@ class UserController extends AbstractController
         return $this->render('register/register.html.twig', [
             'controllerName' => 'app_specialist_register'
         ]);
+    }
+
+    /**
+     * @Route("/delete_user/{id}", name="app_delete_user", methods={"DELETE"})
+    */
+    public function deleteUser(int $id, UserService $userService): Response
+    {
+        $userService->deleteUserById($id);
+
+        return new JsonResponse(['success' => true]);
     }
 
     /**

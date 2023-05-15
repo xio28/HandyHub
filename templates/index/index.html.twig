@@ -3,51 +3,18 @@
 {% block title %}HandyHub | Inicio{% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {{ encore_entry_link_tags('index') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('slider-js') }}
 {% endblock %}
 
 {% block body %}
     {# CABECERA #}
-    <header class="header">
-        <div class="header__icon"><img src="{{ asset('resources/images/logo-light.png') }}" /></div>
-        <nav class="header__nav">
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Quiénes somos</a></li>
-                <li><a href="#">Servicios</a></li>
-                <li><a href="#">Soporte</a></li>
-            </ul>
-        </nav>
-        <div class="header__button">
-            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <div>
-                    <img src="{{ asset(app.user.image) }}" alt="User image" />
-                    <ul class="dropdown-menu">
-                        {% if is_granted('ROLE_SUPERADMIN') or is_granted('ROLE_ADMIN') %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('app_admin_panel') }}">Panel de administrador</a>
-                            </li>
-                        {% elseif is_granted('ROLE_CLIENT') %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('app_client_panel') }}">Mi cuenta</a>
-                            </li>
-                        {% else %}
-                            <li>
-                                <a class="dropdown-item" href="{{ path('app_specialist_panel') }}">Mi cuenta</a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a class="dropdown-item" href="logout">Log out</a>
-                        </li>
-                    </ul>
-                </div>
-                {# <a class="login" href="{{ path('app_logout') }}">Logout</a> #}
-            {% else %}
-                {# <a href="{{ path('app_login') }}">Login</a> #}
-                <a class="login" href="{{ path(register) }}">Login</a>
-            {% endif %}
-        </div>
-    </header>
+    {{ parent() }}
 
     {# CONTENIDO #}
     <main class="main">
@@ -63,71 +30,199 @@
                 </form>
             </div>
         </div>
+    </main>
+
+    <main class="professionals">
+        <h2 class="professionals__h2">Nuestros profesionales, nuestra clave</h2>
         <section class="most-popular">
-            {% for specialist in specialists %}
-                <div class="card-item">
-                    <figure>
-                        <img src="{{ specialist.image }}" alt="imagen">
-                        <figcaption>imagen{{ specialist._id }}</figcaption>
-                    </figure>
-                </div>
-            {% endfor %}
-{#             
             <div class="card-item">
                 <figure>
-                    <img src="" alt="imagen">
+                    <img src="{{ asset('resources/images/users/person-1.jpg') }}" alt="imagen">
                     <figcaption>imagen1</figcaption>
                 </figure>
             </div>
             <div class="card-item">
                 <figure>
-                    <img src="" alt="imagen">
-                    <figcaption>imagen1</figcaption>
+                    <img src="{{ asset('resources/images/users/person-2.jpg') }}" alt="imagen">
+                    <figcaption>imagen2</figcaption>
                 </figure>
             </div>
             <div class="card-item">
                 <figure>
-                    <img src="" alt="imagen">
-                    <figcaption>imagen1</figcaption>
+                    <img src="{{ asset('resources/images/users/person-3.jpg') }}" alt="imagen">
+                    <figcaption>imagen3</figcaption>
                 </figure>
             </div>
             <div class="card-item">
                 <figure>
-                    <img src="" alt="imagen">
-                    <figcaption>imagen1</figcaption>
+                    <img src="{{ asset('resources/images/users/person-4.jpg') }}" alt="imagen">
+                    <figcaption>imagen4</figcaption>
                 </figure>
             </div>
             <div class="card-item">
                 <figure>
-                    <img src="" alt="imagen">
-                    <figcaption>imagen1</figcaption>
+                    <img src="{{ asset('resources/images/users/person-5.jpg') }}" alt="imagen">
+                    <figcaption>imagen5</figcaption>
                 </figure>
-            </div> #}
+            </div>
+            <div class="card-item last-person">
+                <figure>
+                    <img src="{{ asset('resources/images/users/person-6.jpg') }}" alt="imagen">
+                    <figcaption>imagen6</figcaption>
+                </figure>
+            </div>
         </section>
+    </main>
+
+    <section class="records">
+        <div class="record__item">
+            <div>
+                <img src="{{ asset('resources/images/icons/developers.png') }}" alt="price">
+            </div>
+            <p>Profesionales de confianza y excelencia</p>
+        </div>
+        <div class="record__item">
+            <div>
+                <img src="{{ asset('resources/images/icons/guaranteed.png') }}" alt="quality">
+            </div>
+            <p>Calidad y garantía en todos nuestros servicios</p>
+        </div>
+        <div class="record__item">
+            <div>
+                <img src="{{ asset('resources/images/icons/customer-review.png') }}" alt="satisfaction">
+            </div>
+            <p>Nuestro objetivo es tu plena satisfacción</p>
+        </div>
+    </section>
+
+    <main class="testimonials">
+        <h2 class="testimonials__h2">Nuestros clientes opinan</h2>
+        <div class="slider">
+            <div class="slide">
+                <div class="comment">
+                    <strong>Sánchez Martín, Josué</strong>
+                    <p>
+                    Un servicio excelente. Me consiguieron un carpintero profesional 
+                    y puntual que hizo un gran trabajo. Muy recomendable.
+                    </p>
+                </div>
+                <div class="comment">
+                    <strong>Laomor Gómez, Roberto</strong>
+                    <p>
+                        Me buscaron un electricista competente y 
+                        honesto que solucionó mi problema. 
+                    </p>
+                </div>
+                <div class="comment">
+                    <strong>Villaverde Rey, Olimpia</strong>
+                    <p>Un servicio muy bueno. 
+                    Me encontraron un fontanero experimentado 
+                    y eficiente que arregló mi fuga.
+                    </p>
+                </div>
+            </div>
+            <div class="slide">
+                <div class="comment">
+                    <strong>Armengol Mateos, Roberta</strong>
+                    <p>
+                        Me encontraron un pintor profesional 
+                        y creativo que pintó mi salón.
+                    </p>
+                </div>
+                <div class="comment">
+                    <strong>Tudela Alonso, Adelina</strong>
+                    <p>
+                        Me buscaron un albañil profesional y responsable que reformó 
+                        mi cocina. Me gustó el presupuesto sin compromiso.
+                    </p>
+                </div>
+                <div class="comment">
+                    <strong>Salamanca Aguiló, Simón</strong>
+                    <p>
+                        Me consiguieron un jardinero profesional 
+                        y ecológico que arregló mi jardín.
+                    </p>
+                </div>
+            </div>
+            <div class="slide">
+                <div class="comment">
+                    <strong>Morera Guillén, Joaquina</strong>
+                    <p>
+                    Un servicio estupendo. Me buscaron un manitas profesional 
+                    y versátil que me arregló varias cosas en casa. Me sorprendió 
+                    la rapidez y la calidad de su trabajo.
+                    </p>
+                </div>
+                <div class="comment">
+                    <strong>Girald Cabo, Palmira</strong>
+                    <p>
+                        Rápido y cómodo. Y quien me atendió 
+                        para buscar lo que necesitaba fue muy amable.
+                    </p>
+                </div>
+                <div class="comment">
+                    <strong>Torrent Galvéz, Eloy</strong>
+                    <p>
+                        Yo sólo buscaba asesoramiento para una
+                        reforma, y encontraron el profesional
+                        que buscaba, muy atentos.
+                    </p>
+                </div>
+            </div>
+        </div>
     </main>
 
     {# FOOTER #}
     <footer class="footer">
         <div class="footer__container">
-            <div class="footer__container__logo">
-                <img src="/assets/images/logo-light.png" alt="logo">
-            </div>
-            <div class="footer__container__nav">
-                <ul>
-                    <li><a href="#">A</a></li>
-                    <li><a href="#">B</a></li>
-                    <li><a href="#">C</a></li>
-                    <li><a href="#">D</a></li>
-                    <li><a href="#">E</a></li>
-                </ul>
-            </div>
-            <div class="footer__container__social">
-                <ul>
-                    <li><a href="#"><i class="fab fa-facebook-square"></i>FACEBOOK</a></li>
-                    <li><a href="#"><i class="fab fa-twitter-square"></i>TWITTER</a></li>
-                    <li><a href="#"><i class="fab fa-instagram-square"></i>INSTAGRAM</a></li>
-                </ul>
-            </div>
+            <section>
+                <div class="social-media">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/>
+                    </svg>
+                </div>
+                <div class="contact">
+                    <div class="info">
+                        <div class="logo">
+                            <img src="{{ asset('resources/images/logo-dark.png') }}" alt="logo"/>
+                        </div>
+                        <div class="contact-info">
+                            <p><span class="material-icons">call</span> +34 900 50 50 75</p>
+                            <p><span class="material-icons">email</span> staff@hundyhub.com</p>
+                            <p><span class="material-icons">location_on</span> Av. Iglesia, 23, 37914, Cipérez(Salamanca)</p>
+                        </div>
+                    </div>
+                    <div class="privacy">
+                        <h3>Condiciones</h3>
+                        <a href="#">Términos y condiciones</a>
+                        <a href="#">Política de privacidad</a>
+                        <a href="#">Política de cookies</a>
+                    </div>
+                    <div class="about-us">
+                        <h3>Sobre nosotros</h3>
+                        <a href="#">¿Quiénes somos?</a>
+                        <a href="#">Trabaja con nosotros</a>
+                        <a href="#">FAQ</a>
+                    </div>
+                    <div class="newsletter">
+                        <h3>Newsletter</h3>
+                        <p>¡No te pierdas nuestras últimas ofertas y novedades!</p>
+                        <div class="subscription">
+                            <input type="email" name="email">
+                            <button type="button"><span class="material-icons">send</span></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="copyright">
+                <p>&copy; 2023 HandyHub. Todos los derechos reservados</p>
+            </section>
         </div>
     </footer>
 {% endblock %}

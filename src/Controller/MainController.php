@@ -24,7 +24,10 @@ class MainController extends AbstractController
      */
     public function services(): Response
     {
-        // código aquí
+        return $this->render('services/services.html.twig', [
+            'register' => 'app_client_register',
+            'specialists' => 'app_specialist_register'
+        ]);
     }
 
     /**
@@ -40,7 +43,21 @@ class MainController extends AbstractController
      */
     public function contact(): Response
     {
-        // código aquí
+        return $this->render('forms/contact_form.html.twig', [
+            'register' => 'app_client_register',
+            'specialists' => 'app_specialist_register'
+        ]);
+    }
+
+    /**
+     * @Route("/error", name="app_error_page")
+     */
+    public function errorPage(): Response
+    {
+        return $this->render('index/index.html.twig', [
+            'register' => 'app_client_register',
+            'specialists' => 'app_specialist_register'
+        ]);
     }
 }
 

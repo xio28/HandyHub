@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Golos';
+}
+
+body {
+    overflow-x: hidden;
+    line-height: 1.2;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.image, .content {
+    padding: 1em;
+}
+
+.image {
+    text-align: center;
+}
+
+.image img {
+    width: 25em;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: calc(5em + 2vw);
+    color: #d0021b;
+}
+
+h2 {
+    font-weight: 400;
+    font-size: calc(2em + 1vw);
+}
+
+p {
+    padding-top: 1em;
+    line-height: 1.6;
+    font-size: calc(1.2e, + 1vw);
+}

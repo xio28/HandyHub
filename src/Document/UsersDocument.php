@@ -3,12 +3,13 @@
 namespace App\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @MongoDB\Document(collection="users")
  */
-class UsersDocument implements UserInterface {
+class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface {
 
     /**
      * @MongoDB\Id(strategy="INCREMENT")
@@ -61,9 +62,19 @@ class UsersDocument implements UserInterface {
     private $image;
 
     /**
+     * @MongoDB\Field(type="float")
+     */
+    private $price_per_hour;
+
+    /**
      * @MongoDB\Field(type="bool")
      */
     private $policy = false;
+
+    /**
+     * @MongoDB\Field(type="bool")
+     */
+    private $isAvailable = true;
 
     /**
      * @MongoDB\Field(type="bool")
@@ -84,6 +95,11 @@ class UsersDocument implements UserInterface {
      * @MongoDB\Field(type="hash")
      */
     private $creditCard;
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
 
     public function getId()
     {
@@ -130,7 +146,7 @@ class UsersDocument implements UserInterface {
         $this->surname = $surname;
     }
 
-    public function getAddress(): string
+    public function getAddress(): ?string
     {
         return $this->address;
     }
@@ -140,7 +156,7 @@ class UsersDocument implements UserInterface {
         $this->address = $address;
     }
 
-    public function getTelephone(): string
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
@@ -153,7 +169,8 @@ class UsersDocument implements UserInterface {
     public function getRoles(): array
     {
         $roles = $this->roles;
-
+        $roles[] = 'ROLE_USER';
+    
         return array_unique($roles);
     }
 
@@ -164,7 +181,7 @@ class UsersDocument implements UserInterface {
         return $this;
     }
 
-    public function getCategory(): CategoriesDocument
+    public function getCategory(): ?CategoriesDocument
     {
         return $this->category;
     }
@@ -195,7 +212,7 @@ class UsersDocument implements UserInterface {
         $this->image = $image;
     }
 
-    public function getPolicy(): bool 
+    public function getPolicy(): ?bool 
     {
         return $this->policy;
     }
@@ -205,7 +222,17 @@ class UsersDocument implements UserInterface {
         $this->policy = $policy;
     }
 
-    public function getIsVerified(): bool 
+    public function getIsAvailable(): ?bool 
+    {
+        return $this->isAvailable;
+    }
+
+    public function setIsAvailable(bool $isAvailable) 
+    {
+        $this->isAvailable = $isAvailable;
+    }
+
+    public function getIsVerified(): ?bool 
     {
         return $this->isVerified;
     }
@@ -215,7 +242,7 @@ class UsersDocument implements UserInterface {
         $this->isVerified = $verified;
     }
 
-    public function getCurrentAccount(): string
+    public function getCurrentAccount(): ?string
     {
         return $this->currentAccount;
     }
@@ -225,7 +252,7 @@ class UsersDocument implements UserInterface {
         $this->currentAccount = $currentAccount;
     }
 
-    public function getCreditCard(): array
+    public function getCreditCard(): ?array
     {
         return $this->creditCard;
     }

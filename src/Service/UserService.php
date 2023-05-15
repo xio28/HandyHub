@@ -46,8 +46,6 @@ class UserService {
     public function registerClient(Request $request)
     {
         try {
-            $this->documentManager->beginTransaction();
-
             $user = new UsersDocument();
 
             if ($this->checkEmail($request->get('email'))) {
@@ -60,7 +58,7 @@ class UserService {
             $user->setSurname($request->get('surname'));
             $user->setAddress($request->get('address'));
             $user->setTelephone($request->get('telephone'));
-            $user->setRole(RolesConstants::ROLE_CLIENT);
+            $user->setRoles([RolesConstants::ROLE_CLIENT]);
 
             $creditCardInfo = [
                 'number' => $request->get('creditNumber'),
@@ -96,12 +94,9 @@ class UserService {
             $this->logger->info('User '. $user->getId(). ' registered successfully');
             $this->emailService->sendVerificationEmail($user->getEmail(), $verificationLink);
 
-            $this->documentManager->commit();
-
             return true;
             
         } catch(Exception $e) {
-            $this->documentManager->rollback();
             $this->logger->error('User register failed: ' . $e->getMessage());
             return new Response('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -121,32 +116,29 @@ class UserService {
             $user->setName($request->get('name'));
             $user->setSurname($request->get('surname'));
             $user->setTelephone($request->get('telephone'));
-            $user->setRole(RolesConstants::ROLE_SPECIALIST);
+            $user->setRoles([RolesConstants::ROLE_SPECIALIST]);
+            $user->setCurrentAccount($request->get('current_account'));
+
+            $user->setCreditCard($creditCardInfo);
+            $user->setPolicy($request->get('privacy'));
+
+            $user->setIsVerified($user->getIsVerified());
+
+            $this->documentManager->persist($user);
+            $this->documentManager->flush();
 
             $image = $request->files->get('image');
             $dir = $this->publicDirectory;
             $resourcesPath = '/resources/images/users/';
 
             if($image) {
-                $fileName = 'specialist_' . $user->getId() . '.' . $image->getClientOriginalExtension();
+                $fileName = 'client_' . $user->getId() . '.' . $image->getClientOriginalExtension();
                 $image->move($dir . $resourcesPath, $fileName);
                 $user->setImage($resourcesPath . $fileName);
             } else {
                 $user->setImage($resourcesPath . 'commonPic.jpg');
             }
 
-            $user->setCurrentAccount($request->get('surname'));
-            $user->setPolicy($request->get('privacy'));
-
-            $user->setIsVerfied($user->getIsVerified());
-
-            if (count($errors) > 0) {
-                $errorsString = (string) $errors;
-            
-                throw new \Exception($errorsString);
-            }
-
-            // Persistir el nuevo usuario
             $this->documentManager->persist($user);
             $this->documentManager->flush();
 
@@ -156,15 +148,16 @@ class UserService {
             $this->emailService->sendVerificationEmail($user->getEmail(), $verificationLink);
 
             return true;
+            
         } catch(Exception $e) {
             $this->logger->error('User register failed: ' . $e->getMessage());
             return new Response('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function deleteUserByEmail(string $email): void
+    public function deleteUserById(int $id): void
     {
-        $user = $this->findUserByEmail($email);
+        $user = $this->userRepository->findUserById($id);
 
         if ($user) {
             $this->documentManager->remove($user);

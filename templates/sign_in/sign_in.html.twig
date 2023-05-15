@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}HandyHub | Entrar{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('sign_in') }}
+{% endblock %}
+
+{% block body %}
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    <main class="principal">
+        <section class="login">
+            <div class="login__container">
+                <h2 class="login__title">Entrar</h2>
+                <form action="" method="POST" class="login__form">
+                    <div class="login__form-group">
+                        <label for="username" class="login__form-label">Email</label>
+                        <input type="email" name="_username" id="username" class="login__form-input" value="{{ last_email }}" required>
+                    </div>
+                    <div class="login__form-group">
+                        <label for="password" class="login__form-label">Contraseña</label>
+                        <input type="password" name="_password" id="password" class="login__form-input" required>
+                    </div>
+                    <div class="login__form-group">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button type="submit" class="login__form-button">Entrar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+        <section class="register">
+            <h2 class="register__title">¿Nuevo miembro? <span>Regístrate</span></h2>
+            <article class="buttons-choice">
+                <h2 class="buttons-choice__h2">Eres...</h2>
+                <div class="buttons-choice__container">
+                    <a href="{{ path('app_client_register') }}" class="buttons-choice__button">Cliente</a>
+                    <a href="{{ path('app_specialist_register') }}" class="buttons-choice__button">Especialista</a>
+                </div>
+            </article>
+        </section>
+    </main>
+{% endblock %}

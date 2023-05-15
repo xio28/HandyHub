@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('404') }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="image">
+            <img src="{{ asset('resources/images/404.gif') }}" alt="John Travolta Pulp Fiction" />
+        </div>
+        <div class="content">
+            <h1>404</h1>
+            <h2>Upps. ¿Estás perdido?</h2>
+            <p>La página que buscas no existe.
+            A saber cómo llegaste aquí, pero al menos puedes volver
+            a inicio si haces clic en el enlace.
+            </p>
+            <a href="{{ path('app_index') }}">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

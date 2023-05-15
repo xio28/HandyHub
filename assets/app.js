@@ -13,3 +13,11 @@ import $ from 'jquery';
 
 // start the Stimulus application
 import './bootstrap';
+
+
+$(function() {
+    $('#menu').on('click', function() {
+        $(this).toggleClass('open');
+        $('.menu-container').toggleClass('active');
+    });
+});

@@ -1,0 +1,113 @@
+@import 'index.css';
+
+.services {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+    border-top: 4em solid var(--main-color);
+    border-bottom: 4em solid var(--main-color);
+    background-color: var(--red-color);
+}
+
+.services__h2 {
+    width: 100%;
+    text-align: center;
+    font-family: var(--main-font);
+    font-size: calc(1.4rem + 1.6vw);
+    color: #ddd;
+    padding: .6em;
+}
+
+.services__section {
+    width: 100%;
+    padding: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2em;
+}
+
+.card-item {
+    width: min(100%, 30em);
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--second-color);
+    box-shadow: 0 2px 4px var(--main-color);
+    -webkit-border-radius: .1em;
+    -moz-border-radius: .1em;
+    -ms-border-radius: .1em;
+    -o-border-radius: .1em;
+    border-radius: .1em;
+    font-family: var(--second-font);
+    padding: 1em;
+}
+
+.card-item__info strong {
+    font-size: calc(.4em + .6vw);
+    color: var(--main-color);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    padding: .2em;
+    width: 100%;
+    display: block;
+}
+
+.card-item--img {
+    width: 50%;
+    padding: .2em;
+}
+
+.card-item__info {
+    width: 50%;
+    border-left: 4px dotted var(--grey-color);
+    padding: .2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-item__info p {
+    font-size: calc(.4em + .4vw);
+    color: var(--main-color);
+    text-align: center;
+    padding: .2em;
+    width: 100%;
+    display: block;
+}
+
+.my-check {
+    color: rgb(29, 182, 75);
+}
+
+.not-available {
+    color: rgb(182, 29, 29);
+}
+
+.card-button-contract {
+    width: 90%;
+    background-color: var(--main-color);
+    color: var(--second-color);
+    padding: .5em;
+    font-size: calc(.6em + .6vw);
+    -webkit-border-radius: .1em;
+    -moz-border-radius: .1em;
+    -ms-border-radius: .1em;
+    -o-border-radius: .1em;
+    border-radius: .1em;
+    box-shadow: 2px 2px 1px var(--red-color);
+}
+
+.card-button-contract:hover {
+    background-color: var(--red-color);
+    color: var(--second-color);
+    -webkit-transition: all ;
+    -moz-transition: all ;
+    -ms-transition: all ;
+    -o-transition: all ;
+    transition: all .5s ease-in-out;
+    box-shadow: 2px 2px 1px var(--grey-color);
+}
