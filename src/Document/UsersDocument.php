@@ -2,6 +2,7 @@
 
 namespace App\Document;
 
+use App\Document\CategoriesDocument;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -52,7 +53,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
 
     /**
-     * @MongoDB\ReferenceOne(targetDocument="CategoriesDocument", storeAs="id")
+     * @MongoDB\ReferenceOne(targetDocument=CategoriesDocument::class)
      */
     private $category;
 
@@ -210,6 +211,16 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImage(?string $image)
     {
         $this->image = $image;
+    }
+
+    public function getPricePerHour(): float
+    {
+        return $this->pricePerHour;
+    }
+
+    public function setPricePerHour(float $pricePerHour)
+    {
+        $this->pricePerHour = $pricePerHour;
     }
 
     public function getPolicy(): ?bool 

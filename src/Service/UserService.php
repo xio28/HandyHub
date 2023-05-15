@@ -4,6 +4,7 @@ namespace App\Service;
 use App\Constants\RolesConstants;
 use App\Document\UsersDocument;
 use App\Repository\UserRepository;
+use App\Repository\CategoryRepository;
 use App\Service\EmailService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
@@ -21,6 +22,7 @@ class UserService {
     private $router;
     private $passwordHasher;
     private $userRepository;
+    private $categoryRepository;
     private $publicDirectory;
 
     public function __construct(
@@ -31,6 +33,7 @@ class UserService {
         UrlGeneratorInterface $router,
         UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository,
+        CategoryRepository $categoryRepository,
         string $publicDirectory
     ) {
         $this->documentManager = $documentManager;
@@ -40,6 +43,7 @@ class UserService {
         $this->router = $router;
         $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
+        $this->categoryRepository = $categoryRepository;
         $this->publicDirectory = $publicDirectory;
     }
 
@@ -106,6 +110,7 @@ class UserService {
     {
         try {
             $user = new UsersDocument();
+            
 
             if ($this->checkEmail($request->get('email'))) {
                 throw new \Exception('Email is in use.');
@@ -118,8 +123,18 @@ class UserService {
             $user->setTelephone($request->get('telephone'));
             $user->setRoles([RolesConstants::ROLE_SPECIALIST]);
             $user->setCurrentAccount($request->get('current_account'));
+            $user->setPricePerHour($request->get('price_per_hour'));
 
-            $user->setCreditCard($creditCardInfo);
+            $categoryId = $request->get('category');
+
+            $category = $this->categoryRepository->findCategoryById($categoryId);
+            var_dump($category);
+            if ($category === null) {
+                throw new \Exception('Invalid category ID.');
+            }
+
+            $user->setCategory($category);
+
             $user->setPolicy($request->get('privacy'));
 
             $user->setIsVerified($user->getIsVerified());
@@ -132,7 +147,7 @@ class UserService {
             $resourcesPath = '/resources/images/users/';
 
             if($image) {
-                $fileName = 'client_' . $user->getId() . '.' . $image->getClientOriginalExtension();
+                $fileName = 'specialist_' . $user->getId() . '.' . $image->getClientOriginalExtension();
                 $image->move($dir . $resourcesPath, $fileName);
                 $user->setImage($resourcesPath . $fileName);
             } else {

@@ -90,13 +90,13 @@
                                 <td data-label="Roles">{{ user.roles|first }}</td>
                                 <td class="{{ (user.roles|first in ['ROLE_ADMIN', 'ROLE_SUPERADMIN']) ? '' : (user.isVerified is defined and user.isVerified ? 'verified' : 'no-verified') }}" data-label="Verified"></td>
                                 <td data-label="">
-                                    <button class="btn edit">
+                                    <button class="btn edit edit-user" data-id="{{ user.id }}">
                                         <span class="material-icons">
                                             edit
                                         </span>
                                     </button>
                                     {% if user.roles|first != 'ROLE_SUPERADMIN' %}
-                                        <button class="btn trash" data-id="{{ user.id }}">
+                                        <button class="btn trash trash-user" data-id="{{ user.id }}">
                                             <span class="material-icons">
                                                 delete_forever
                                             </span>
@@ -110,7 +110,13 @@
                 </div>
             </div>
             <div id="content-categories-page" class="page">
-                <div class="card">
+                <div class="w-35 pb-1">
+                    <div class="flex-input">
+                        <input type="text" id="category" name="category" class="category-input" placeholder="New Category">
+                        <button id="addCategory" class="btn">Add</button>
+                    </div>
+                </div>
+                <div class="card w-35">
                     <table>
                         <caption>Categories</caption>
                         <thead>
@@ -121,12 +127,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for user in users %}
-                            <tr>
-                                <td data-label="ID">{{ user.id }}</td>
-                                <td data-label="Name">{{ user.name }}</td>
-                                <td data-label=""></td>
-                            </tr>
+                            {% for category in categories %}
+                                <tr>
+                                    <td data-label="ID">{{ category.id }}</td>
+                                    <td data-label="Name">{{ category.category }}</td>
+                                    <td data-label="">
+                                        <button class="btn edit-category" data-id="{{ category.id }}">
+                                            <span class="material-icons">
+                                                edit
+                                            </span>
+                                        </button>
+                                        <button class="btn trash-category" data-id="{{ category.id }}">
+                                            <span class="material-icons">
+                                                delete_forever
+                                            </span>
+                                        </button>
+                                    </td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>

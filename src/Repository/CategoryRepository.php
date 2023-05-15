@@ -14,11 +14,15 @@ class CategoryRepository
         $this->documentManager = $documentManager;
     }
 
-    public function getAll(): ?UsersDocument
+    public function getAll(): ?array
     {
         return $this->documentManager->getRepository(CategoriesDocument::class)->findAll();
     }
 
+    public function findCategoryById(int $id): ?CategoriesDocument
+    {
+        return $this->documentManager->getRepository(CategoriesDocument::class)->find($id);
+    }
 }
 
 ?>

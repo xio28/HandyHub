@@ -2,7 +2,7 @@
 namespace App\Service;
 
 use App\Document\CategoriesDocument;
-use App\Service\CategoryService;
+use App\Repository\CategoryRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,17 +10,47 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CategoryService {
     private $documentManager;
+    private $categoryRepository;
     private $logger;
-    private $publicDirectory;
 
     public function __construct(
         DocumentManager $documentManager, 
+        CategoryRepository $categoryRepository, 
         LoggerInterface $logger,
-        string $publicDirectory
     ) {
         $this->documentManager = $documentManager;
+        $this->categoryRepository = $categoryRepository;
         $this->logger = $logger;
-        $this->publicDirectory = $publicDirectory;
+    }
+
+    public function registerCategory(Request $request)
+    {
+        try {
+            $cat = new CategoriesDocument();
+    
+            $cat->setCategory($request->get('category'));
+    
+            $this->documentManager->persist($cat);
+            $this->documentManager->flush();
+    
+            $this->logger->info('Category '. $cat->getId(). ' registered successfully');
+    
+            return $cat;
+            
+        } catch(Exception $e) {
+            $this->logger->error('Category register failed: ' . $e->getMessage());
+            return new Response('Ha habido un error al registrar la categoría. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function deleteCategoryById(int $id): void
+    {
+        $category = $this->categoryRepository->findCategoryById($id);
+
+        if ($category) {
+            $this->documentManager->remove($category);
+            $this->documentManager->flush();
+        }
     }
 
     public function getCategories(Request $request)

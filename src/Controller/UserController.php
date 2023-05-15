@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\UserService;
+use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,8 +37,10 @@ class UserController extends AbstractController
     /**
      * @Route("/register/specialist", name="app_specialist_register")
      */
-    public function registerSpecialist(Request $request)
+    public function registerSpecialist(Request $request, UserService $userService, CategoryRepository $categoryRepository)
     {
+        $categories = $categoryRepository->getAll();
+
         if ($request->isMethod('POST')) {
             $success = $userService->registerSpecialist($request);
             
@@ -49,7 +52,8 @@ class UserController extends AbstractController
         } 
 
         return $this->render('register/register.html.twig', [
-            'controllerName' => 'app_specialist_register'
+            'controllerName' => 'app_specialist_register',
+            'categories' => $categories
         ]);
     }
 

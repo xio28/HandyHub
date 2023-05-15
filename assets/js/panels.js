@@ -3,7 +3,7 @@ import $ from 'jquery';
 $(function() {
     $(".sidebar-item").on('click', function(e){
         e.preventDefault();
-        var target = $(this).attr('href');
+        let target = $(this).attr('href');
         $('.content').not(target).hide();
         $(target).fadeIn(600);
     });
@@ -27,8 +27,8 @@ $(function() {
 
     $(document).on('mouseover', '#left-menu.small-left-menu > ul > li', function() {
         if (!$(this).hasClass('has-sub')) {
-            var label = $(this).find('span').text();
-            var position = $(this).position();
+            let label = $(this).find('span').text();
+            let position = $(this).position();
             $('#show-lable').css({
                 'top': position.top + 79,
                 'left': position.left + 59,
@@ -38,20 +38,20 @@ $(function() {
 
             $('#show-lable').text(label);
         } else {
-            var position = $(this).position();
+            let position = $(this).position();
             $(this).find('ul').addClass('open');
 
             if ($(this).find('ul').hasClass('open')) {
                 const height = 47;
-                var count_submenu_li = $(this).find('ul > li').length;
+                let count_submenu_li = $(this).find('ul > li').length;
                 if (position.top >= 580) {
-                    var style = {
+                    let style = {
                         'top': (position.top + 100) - (height * count_submenu_li),
                         'height': height * count_submenu_li + 'px'
                     }
                     $(this).find('ul.open').css(style);
                 } else {
-                    var style = {
+                    let style = {
                         'top': position.top + 79,
                         'height': height * count_submenu_li + 'px'
                     }
@@ -83,8 +83,8 @@ $(function() {
         windowResize();
     });
 
-    $('#left-menu li.has-sub > a').click(function() {
-        var _this = $(this).parent();
+    $('#left-menu li.has-sub > a').on('click', function() {
+        let _this = $(this).parent();
 
         _this.find('ul').toggleClass('open');
         $(this).closest('li').toggleClass('rotate');
@@ -95,15 +95,15 @@ $(function() {
 
         if (_this.find('ul').hasClass('open')) {
             const height = 47;
-            var count_submenu_li = _this.find('ul > li').length;
+            let count_submenu_li = _this.find('ul > li').length;
             _this.find('ul').css('height', height * count_submenu_li + 'px');
         }
     });
 
     $('#left-menu ul li').on('click', function() {
-        var clickedId = $(this).attr('id');
+        let clickedId = $(this).attr('id');
     
-        var contentId = 'content-' + clickedId;
+        let contentId = 'content-' + clickedId;
     
         $('#left-menu ul li, .page').removeClass('active');
     
@@ -111,10 +111,10 @@ $(function() {
         $('#' + contentId).addClass('active');
     });
 
-    $('.trash').click(function() {
-        var userId = $(this).attr('data-id');
+    $('.trash-user').on('click', function() {
+        let userId = $(this).attr('data-id');
     
-        var isConfirmed = confirm('¿Estás seguro de que quieres eliminar este usuario?');
+        let isConfirmed = confirm('¿Estás seguro de que quieres eliminar este usuario?');
     
         if (isConfirmed) {
             $.ajax({
@@ -127,9 +127,66 @@ $(function() {
         }
     });
 
+    $("#addCategory").on('click', function(){
+        let categoryName = $("#category").val();
+        if(categoryName) {
+            $.ajax({
+                url: "/register/categories",
+                type: "POST",
+                data: {
+                    category: categoryName
+                },
+                success: function (data) {
+                    // Suponiendo que data contiene el nuevo objeto categoría
+                    let newRow = $("<tr>");
+                    let cols = "";
+    
+                    cols += '<td data-label="ID">' + data.id + '</td>';
+                    cols += '<td data-label="Name">' + data.category + '</td>';
+                    cols += `<td data-label="">
+                        <button class="btn edit-category" data-id="${data.id}">
+                            <span class="material-icons">
+                                edit
+                            </span>
+                        </button>
+                        <button class="btn trash-category" data-id="${data.id}">
+                            <span class="material-icons">
+                                delete_forever
+                            </span>
+                        </button>
+                    </td>`;
+    
+                    newRow.append(cols);
+                    $("table").append(newRow);
+                    $("#category").val('');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
+        } else {
+            alert('Please enter a category name');
+        }
+    });
+
+    $('.trash-category').on('click', function() {
+        let userId = $(this).attr('data-id');
+    
+        let isConfirmed = confirm('¿Estás seguro de que quieres eliminar este usuario?');
+    
+        if (isConfirmed) {
+            $.ajax({
+                url: '/delete_category/' + userId,
+                type: 'DELETE',
+                success: function(result) {
+                    $('button[data-id="' + userId + '"]').parents('tr').remove();
+                }
+            });
+        }
+    });
 
     function windowResize() {
-        var width = $(window).width();
+        let width = $(window).width();
         if (width <= 992) {
             $('#left-menu').addClass('small-left-menu');
             $('#logo').addClass('small-left-menu p-0 pl-1');

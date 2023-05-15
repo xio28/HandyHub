@@ -6,16 +6,20 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
 
 class PanelController extends AbstractController
 {
     private $userRepository;
+    private $categoryRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, CategoryRepository $categoryRepository)
     {
         $this->userRepository = $userRepository;
+        $this->categoryRepository = $categoryRepository;
     }
+    
     /**
      * @Route("/admin", name="app_admin_panel")
      * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPERADMIN')")
@@ -23,9 +27,11 @@ class PanelController extends AbstractController
     public function panelAdmin(): Response
     {
         $users = $this->userRepository->getAll();
+        $categories = $this->categoryRepository->getAll();
 
         return $this->render('panels/admin_panel.html.twig', [
-            'users' => $users
+            'users' => $users,
+            'categories' => $categories
         ]);
     }
 

@@ -24,6 +24,10 @@ a {
     text-decoration: none;
 }
 
+.w-35 {
+    width: 35vw !important;
+}
+
 ::placeholder {
     color: #ccc !important;
     font-weight: 300;
@@ -63,11 +67,29 @@ a {
     display: block;
 }
 
+.flex-input {
+    display: flex;
+    gap: .2em;
+    justify-content: flex-end;
+}
+
+.flex-input > .category-input {
+    width: 50%;
+}
+
+.flex-input > .btn {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.pb-1 {
+    padding-bottom: 1em;
+}
+
 input {
-    border-color: #d8e0e5;
+    border: 1px solid #ccc;
     border-radius: 2px !important;
-    box-shadow: none !important;
-    font-weight: 300 !important;
+    padding: .5em;
 }
 
 .form-control:disabled,
@@ -102,14 +124,24 @@ input {
     border-radius: 5px;
     display: flex;
     align-items: center;
+    -webkit-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
-.edit {
+.edit-user,
+.edit-category {
     background-color: #ffc107;
 }
 
-.trash {
+.trash-user,
+.trash-category {
     background-color: #d9534f;
+}
+
+.btn:hover {
+    background-color: #333;
+    color: #fff;
 }
 
 .btn > span {
@@ -125,7 +157,6 @@ input {
 }
 
 button.btn {
-    border-radius: 2px !important;
     box-shadow: none !important;
 }
 

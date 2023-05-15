@@ -20,5 +20,10 @@
   "build/assets_styles_index_css-assets_styles_reset_css-assets_styles_reset_css-assets_styles_reset_c-cb4ca7.css": "/build/assets_styles_index_css-assets_styles_reset_css-assets_styles_reset_css-assets_styles_reset_c-cb4ca7.css",
   "build/images/fondo-1.jpg": "/build/images/fondo-1.491c2a3d.jpg",
   "build/images/fondo-2.jpg": "/build/images/fondo-2.b587f1ee.jpg",
-  "build/images/service.jpg": "/build/images/service.1ae7633a.jpg"
+  "build/images/service.jpg": "/build/images/service.1ae7633a.jpg",
+  "build/vendors-node_modules_core-js_internals_array-slice_js-node_modules_core-js_internals_export_j-81953d.js": "/build/vendors-node_modules_core-js_internals_array-slice_js-node_modules_core-js_internals_export_j-81953d.js",
+  "build/vendors-node_modules_core-js_modules_es_json_stringify_js-node_modules_jquery_dist_jquery_js.js": "/build/vendors-node_modules_core-js_modules_es_json_stringify_js-node_modules_jquery_dist_jquery_js.js",
+  "build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_core-js_modules_es_da-03e5c3.js": "/build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_core-js_modules_es_da-03e5c3.js",
+  "build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_a-ad0f2c.js": "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_a-ad0f2c.js",
+  "build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_modules_es_obj-8ce687.js": "/build/vendors-node_modules_core-js_internals_array-iteration_js-node_modules_core-js_modules_es_obj-8ce687.js"
 }

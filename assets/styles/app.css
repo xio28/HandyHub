@@ -47,17 +47,9 @@
     padding: 1em;
 }
 
-.header__nav ul li a::first-letter {
+.header__nav ul li a::first-letter,
+.header__button ul li a::first-letter {
     color: var(--red-color);
-}
-
-.header__nav ul li:hover {
-    border-bottom: 2px solid var(--red-color);
-    -webkit-transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -ms-transition: all .5s ease-in-out;
-    -o-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out;
 }
 
 .header__button {
@@ -87,6 +79,16 @@
     flex-direction: column;
     gap: 1em;
     padding: 1em;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+}
+
+.dropdown .dropdown-menu a {
+    font-size: 1.2em;
+    font-weight: normal;
 }
 
 .dropdown:hover .dropdown-menu {
