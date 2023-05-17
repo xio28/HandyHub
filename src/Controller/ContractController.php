@@ -71,9 +71,14 @@ class ContractController extends AbstractController
     /**
      * @Route("/complete/contract/{id}", name="app_contract_reject")
      */
-    public function rejectContract(int $id)
+    public function completeContract(int $id)
     {
-        
+        $contract->setStatus(ContractsDocument::STATUS_COMPLETED);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
     }
 
     // /**

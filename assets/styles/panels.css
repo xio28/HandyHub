@@ -72,6 +72,20 @@ a {
     width: 100%;
 }
 
+.d-flex {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5em;
+}
+
+.d-flex > input {
+    border: 1px solid #ccc;
+    border-radius: 2px !important;
+    padding: 0.5em;
+    min-width: 45%;
+}
+
 #content-contracts-page {
     width: 100%;
 }
@@ -401,6 +415,7 @@ a:hover {
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
+    padding: 1em;
 }
 
 .card .title {
@@ -500,6 +515,17 @@ fieldset {
 
 legend {
     font-size: calc(2em + .8vw);
+}
+
+.user-image-panels {
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.mr-1 {
+    margin-right: 1em;
 }
 
 @media only screen and (max-width: 992px) {

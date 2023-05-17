@@ -37,41 +37,39 @@ class ContractService {
     {
         try {
             $preContract = $this->session->get('preContract');
-
+    
             $contract = new ContractsDocument();
-
+    
             $clientId = $preContract['clients']['id'];
             $specialistId = $preContract['specialists']['id'];
             $client = $this->documentManager->getRepository(UsersDocument::class)->find($clientId);
             $specialist = $this->documentManager->getRepository(UsersDocument::class)->find($specialistId);
-
+    
             $contract->setClient($client);
             $contract->setSpecialist($specialist);
-
+    
             $date = new \DateTime($preContract['date']);
-            $dateF = $date->format('Y-m-d');
-            $contract->setDate($dateF);
-
-            $hourIn = new \DateTime($preContract['hour']);
-            $hourInF = $hourIn->format('H:i');
-            $contract->setHourIn($hourInF);
-
+            $contract->setDate($date);
+    
+            $hourIn = $preContract['hour'];
+            $contract->setHourIn($hourIn);
+    
             $contract->setPricePerHour($preContract['specialists']['pricePerHour']);
             $contract->setStatus(ContractsDocument::STATUS_IN_PROGRESS);
-
+    
             $totalPrice = $preContract['specialists']['pricePerHour'] + ($preContract['specialists']['pricePerHour'] * $contract->getTax());
             $contract->setTotalPrice($totalPrice);
-
+    
             $this->documentManager->persist($contract);
             $this->documentManager->flush();
-
+    
             return true;
-
+    
         } catch (Exception $e) {
             $this->logger->error('Contract register failed: ' . $e->getMessage());
             return new Response('Ha habido un error al registrar el contrato. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
+    }    
 
     public function preContract(Request $request)
     {
@@ -178,7 +176,7 @@ class ContractService {
      * - If the current time is later than 21:00 or earlier than 08:00, set the time to 08:00 of the next day.
      * - Otherwise, add one hour to the current time.
      *
-     * @return \DateTime The adjusted date and time.
+     * @return array The adjusted date and time.
      */
     private function getAdjustedDateTime(): array
     {
@@ -191,19 +189,26 @@ class ContractService {
          * @var int $currentHour The current hour. 
          */
         $currentHour = (int)$currentDateTime->format('H');
-    
+        
         if ($currentHour >= 21 || $currentHour < 8) {
             if ($currentHour >= 21) {
                 $currentDateTime->modify('+1 day');
             }
-            $currentDateTime->setTime(8, 0);
+            $currentHour = 8;
         } else {
-            $currentDateTime->add(new \DateInterval('PT1H'));
+            $currentHour++;
+            if ($currentHour == 24) {
+                $currentHour = 0;
+                $currentDateTime->modify('+1 day');
+            }
         }
-    
+        
+        // Convert the hour to a string in "hh:mm" format.
+        $hourString = str_pad($currentHour, 2, '0', STR_PAD_LEFT) . ":00";
+        
         return [
             'date' => $currentDateTime->format('Y-m-d'), // date in "yyyy-mm-dd" format
-            'time' => $currentDateTime->format('H:i'), // time in "hh:mm" format
+            'time' => $hourString,
         ];
     }
 

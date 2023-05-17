@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
+use App\Repository\CategoryRepository;
+use App\Repository\ContractRepository;
+use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\CategoryRepository;
-use App\Repository\ContractRepository;
-use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Security as Sec;
 
 class PanelController extends AbstractController
 {
     private $userRepository;
     private $categoryRepository;
     private $contractRepository;
+    private $security;
 
     /**
      * PanelController constructor.
@@ -23,11 +25,12 @@ class PanelController extends AbstractController
      * @param CategoryRepository $categoryRepository The CategoryRepository instance.
      * @param ContractRepository $contractRepository The ContractRepository instance.
      */
-    public function __construct(UserRepository $userRepository, CategoryRepository $categoryRepository, ContractRepository $contractRepository)
+    public function __construct(UserRepository $userRepository, CategoryRepository $categoryRepository, ContractRepository $contractRepository, Sec $security)
     {
         $this->userRepository = $userRepository;
         $this->categoryRepository = $categoryRepository;
         $this->contractRepository = $contractRepository;
+        $this->security = $security;
     }
     
     /**
@@ -60,8 +63,11 @@ class PanelController extends AbstractController
     {
         $contracts = $this->contractRepository->getAll();
 
+        $user = $this->security->getUser();
+
         return $this->render('panels/client_panel.html.twig', [
             'contracts' => $contracts,
+            'clients' => $user
         ]);
     }
 

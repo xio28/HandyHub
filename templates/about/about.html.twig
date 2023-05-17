@@ -3,77 +3,12 @@
 {% block title %}HandyHub | Quiénes somos{% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {{ encore_entry_link_tags('about') }}
 {% endblock %}
 
 {% block body %}
-{# CABECERA #}
-    <header class="header">
-        <div class="header__icon"><img src="{{ asset('resources/images/logo-light.png') }}" /></div>
-        <div class="ds-menu">
-            <nav class="header__nav">
-                <ul>
-                    <li><a href="{{ path('app_index') }}">Inicio</a></li>
-                    <li><a href="{{ path('app_about') }}">Quiénes somos</a></li>
-                    <li><a href="{{ path('app_services') }}">Servicios</a></li>
-                    <li><a href="{{ path('app_support') }}">Soporte</a></li>
-                </ul>
-            </nav>
-            <div class="header__button">
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <div>
-                        <img src="{{ asset(app.user.image) }}" alt="User image" />
-                        <ul class="dropdown-menu">
-                            {% if is_granted('ROLE_SUPERADMIN') or is_granted('ROLE_ADMIN') %}
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('app_admin_panel') }}">Panel de administrador</a>
-                                </li>
-                            {% elseif is_granted('ROLE_CLIENT') %}
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('app_client_panel') }}">Mi cuenta</a>
-                                </li>
-                            {% else %}
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('app_specialist_panel') }}">Mi cuenta</a>
-                                </li>
-                            {% endif %}
-                            <li>
-                                <a class="dropdown-item" href="logout">Desconectar</a>
-                            </li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a class="login" href="{{ path('app_login') }}">Entrar</a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="sm-menu">
-            <div id="menu" class="menu btn1" data-menu="1">
-                <div class="icon-left"></div>
-                <div class="icon-right"></div>
-            </div>
-            <div id="menu-toggler" class="menu-container">
-                <div class="menu-flex">
-                    <a href="{{ path('app_index') }}">Inicio</a>
-                    <a href="{{ path('app_about') }}">Quiénes somos</a>
-                    <a href="{{ path('app_services') }}">Servicios</a>
-                    <a href="{{ path('app_support') }}">Soporte</a>
-                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                        {% if is_granted('ROLE_SUPERADMIN') or is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('app_admin_panel') }}">Panel de admin</a>
-                        {% elseif is_granted('ROLE_CLIENT') %}
-                            <a href="{{ path('app_client_panel') }}">Mi cuenta</a>
-                        {% else %}
-                            <a href="{{ path('app_specialist_panel') }}">Mi cuenta</a>
-                        {% endif %}
-                        <a class="dropdown-item disconnect" href="{{ path('app_logout') }}">Desconectar</a>
-                    {% else %}
-                        <a class="login login-mobile" href="{{ path('app_login') }}">Entrar</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </header>
+    {{ parent() }}
 
     <div class="we-are-block">
         <div id="about-us-section" class="about__bg">

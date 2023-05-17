@@ -34,12 +34,12 @@ class ContractsDocument
     private $date;
 
     /**
-     * @MongoDB\Field(type="date")
+     * @MongoDB\Field(type="string")
      */
     private $hourIn;
 
     /**
-     * @MongoDB\Field(type="date")
+     * @MongoDB\Field(type="string")
      */
     private $hourOut;
 

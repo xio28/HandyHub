@@ -12,17 +12,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
 {
     private $documentManager;
     private $userService;
+    private $security;
 
-    public function __construct(UserService $userService, DocumentManager $documentManager)
+    public function __construct(UserService $userService, DocumentManager $documentManager, Security $security)
     {
         $this->documentManager = $documentManager;
         $this->userService = $userService;
+        $this->security = $security;
     }
 
     /**
@@ -97,12 +100,15 @@ class UserController extends AbstractController
     public function updateClient(Request $request)
     {
         if ($request->isMethod('POST')) {
-            $success = $this->userService->registerSpecialist($request);
+            $user = $this->security->getUser();
+            $userId = $user->getId();
+
+            $success = $this->userService->updateClient($request, $userId);
             
             if ($success) {
-                return $this->redirectToRoute('app_index');
+                return $this->redirectToRoute('app_client_panel');
             } else {
-                throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
+                throw new \Exception('Ha habido un error al actualizar.');
             }
         } 
     }

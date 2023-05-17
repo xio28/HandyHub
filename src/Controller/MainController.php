@@ -67,7 +67,7 @@ class MainController extends AbstractController
      */
     public function about(): Response
     {
-        // código aquí
+        return $this->render('about/about.html.twig');
     }
 
     /**
@@ -75,10 +75,7 @@ class MainController extends AbstractController
      */
     public function contact(): Response
     {
-        return $this->render('forms/contact_form.html.twig', [
-            'register' => 'app_client_register',
-            'specialists' => 'app_specialist_register'
-        ]);
+        return $this->render('forms/contact_form.html.twig');
     }
 
     /**

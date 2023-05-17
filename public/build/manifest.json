@@ -14,7 +14,7 @@
   "build/verification.css": "/build/verification.css",
   "build/panels-css.css": "/build/panels-css.css",
   "build/contract-css.css": "/build/contract-css.css",
-  "build/form_contact.css": "/build/form_contact.css",
+  "build/contact-css.css": "/build/contact-css.css",
   "build/table.css": "/build/table.css",
   "build/runtime.js": "/build/runtime.js",
   "build/vendors-node_modules_core-js_internals_export_js.js": "/build/vendors-node_modules_core-js_internals_export_js.js",
