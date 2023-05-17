@@ -137,7 +137,6 @@ $(function() {
                     category: categoryName
                 },
                 success: function (data) {
-                    // Suponiendo que data contiene el nuevo objeto categoría
                     let newRow = $("<tr>");
                     let cols = "";
     
@@ -184,6 +183,100 @@ $(function() {
             });
         }
     });
+
+    $('.resend-btn').click(function() {
+        var userId = $(this).data('id');
+        $.post({
+            url: '/resend_email/' + userId,
+            success: function(response) {
+                alert('Verification email sent successfully.');
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+
+    $('.trash-contract').on('click', function(event) {
+        event.preventDefault();
+        var contractId = $(this).data('id');
+
+        // Realizar la solicitud AJAX
+        $.ajax({
+            url: '/reject/contract/' + contractId,
+            method: 'POST',
+            success: function(response) {
+                //
+            },
+            error: function(xhr, status, error) {
+                // 
+            }
+        });
+    });
+
+    $('#addAdmin').on('click', function(e) {
+        e.preventDefault();
+        var formData = $('form').serialize();
+        
+        $.ajax({
+            url: '/register/admin',
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+    
+    function updateUserTable(admin) {
+        var row = $('<tr>');
+        row.append($('<td>').text(admin.id));
+        row.append($('<td>').text(admin.name));
+        row.append($('<td>').text(admin.surname));
+        row.append($('<td>').text(admin.email));
+        row.append($('<td>').addClass('min-h').text(admin.telephone));
+        row.append($('<td>').text(admin.roles[0]));
+        row.append($('<td>').addClass(admin.isVerified ? 'verified' : ''));
+        row.append($('<td>').html(`
+            <button class="btn edit-user" data-id="${admin.id}">
+                <span class="material-icons">edit</span>
+            </button>
+            <button class="btn trash-user" data-id="${admin.id}">
+                <span class="material-icons">delete_forever</span>
+            </button>
+        `));
+        
+        $('table tbody').append(row);
+    }
+
+    $('#updateCategoryForm').on('submit', function(event) {
+        event.preventDefault();
+        
+        var categoryId = $(this).data('category-id');
+        var formData = $(this).serialize();
+        
+        $.ajax({
+            url: '/update_category/' + categoryId,
+            method: 'PUT',
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    console.error(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+
 
     function windowResize() {
         let width = $(window).width();

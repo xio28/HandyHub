@@ -14,6 +14,17 @@ class EmailService
         $this->mailer = $mailer;
     }
 
+    public function sendAccountVerificationConfirmationEmail(string $to)
+    {
+        $email = (new Email())
+            ->from('admin@handyhubteam.com')
+            ->to($to)
+            ->subject('Verificación correcta')
+            ->html('<p>Has verificado tu cuenta correctamente.</p>');
+
+        $this->mailer->send($email);
+    }
+
     public function sendVerificationEmail(string $to, string $verificationLink)
     {
         $email = (new Email())

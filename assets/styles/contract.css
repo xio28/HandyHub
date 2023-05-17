@@ -1,0 +1,101 @@
+
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ddd;
+}
+
+.contract {
+    /* width: 45%; */
+    background-color: var(--second-color);
+}
+
+.contract form {
+    padding: 1.2em;
+}
+
+.d-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 0.5em;
+}
+
+.d-flex > input {
+    width: 10vw;
+    border: 1px solid #bbb;
+    padding: .5em;
+    border-radius: 2px;
+}
+
+.d-flex-center {
+    width: 100%;
+    border: 1px solid #bbb;
+    padding: .5em;
+    border-radius: 2px;
+}
+
+.d-flex-center > input {
+    width: 100%;
+    text-align: right;
+    border-radius: 2px;
+}
+
+h2 {
+    font-size: calc(2em + 2vw);
+    font-family: var(--third-font);
+    text-align: center;
+    padding-bottom: 1em;
+}
+
+form {
+    padding: 1.8em;
+    margin: 0 auto;
+    border-radius: .5em;
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    -ms-border-radius: .5em;
+    -o-border-radius: .5em;
+}
+
+fieldset {
+    border: 1px solid grey;
+    padding: 1em;
+    border-radius: 5px;
+}
+
+legend {
+    font-size: calc(2em + .8vw);
+}
+
+.btn {
+    padding: .8em;
+    border-radius: 2px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.reject {
+    background-color: red;
+    color: #fff;
+    font-weight: bold;
+}
+
+.accept {
+    background-color: green;
+    color: #fff;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #333;
+
+}

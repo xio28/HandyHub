@@ -47,6 +47,22 @@ class CategoryController extends AbstractController
     }
 
     /**
+     * @Route("/update_category/{id}", name="app_update_category", methods={"PUT"})
+     */
+    public function updateCategory(int $id, CategoryService $categoryService): Response
+    {
+        try {
+            $category = $categoryService->updateCategoryById($id);
+
+            return new JsonResponse(['success' => true, 'category' => $category]);
+
+        } catch (Exception $e) {
+            $this->logger->error('Category update failed: ' . $e->getMessage());
+            return new JsonResponse(['success' => false, 'message' => 'Updated error.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * @Route("/get/categories", name="app_get_categories")
      */
     public function getCategories(Request $request)

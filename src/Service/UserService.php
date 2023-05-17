@@ -9,6 +9,7 @@ use App\Service\EmailService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -106,6 +107,64 @@ class UserService {
         }
     }
 
+    public function updateClient(Request $request, int $id)
+    {
+        try {
+            $user = $this->documentManager->getRepository(UsersDocument::class)->find($id);
+    
+            if (!$user) {
+                throw new \Exception('User not found.');
+            }
+    
+            if ($request->get('email') && $this->checkEmail($request->get('email'), $id)) {
+                throw new \Exception('Email is already in use.');
+            }
+    
+            $fieldsToUpdate = ['email', 'password', 'name', 'surname', 'address', 'telephone'];
+            $creditCardFields = ['creditNumber', 'creditName', 'creditExpire', 'creditCvv'];
+    
+            foreach ($fieldsToUpdate as $field) {
+                $value = $request->get($field);
+                if ($value !== null) {
+                    $setterMethod = 'set' . ucfirst($field);
+                    $user->$setterMethod($value);
+                }
+            }
+
+            $creditCardInfo = [];
+            foreach ($creditCardFields as $field) {
+                $value = $request->get($field);
+                if ($value !== null) {
+                    $creditCardInfo[$field] = $value;
+                }
+            }
+            if (!empty($creditCardInfo)) {
+                $user->setCreditCard($creditCardInfo);
+            }
+
+            $image = $request->files->get('image');
+            $dir = $this->publicDirectory;
+            $resourcesPath = '/resources/images/users/';
+    
+            if ($image) {
+                $fileName = 'client_' . $user->getId() . '.' . $image->getClientOriginalExtension();
+                $image->move($dir . $resourcesPath, $fileName);
+                $user->setImage($resourcesPath . $fileName);
+            }
+    
+            $this->documentManager->persist($user);
+            $this->documentManager->flush();
+    
+            $this->logger->info('User ' . $user->getId() . ' updated successfully');
+    
+            return true;
+            
+        } catch (Exception $e) {
+            $this->logger->error('User update failed: ' . $e->getMessage());
+            return new Response('Ha habido un error al actualizar el usuario. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function registerSpecialist(Request $request)
     {
         try {
@@ -166,6 +225,110 @@ class UserService {
         } catch (Exception $e) {
             $this->logger->error('User register failed: ' . $e->getMessage());
             return new Response('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function updateSpecialist(Request $request, int $id)
+    {
+        try {
+            $user = $this->documentManager->getRepository(UsersDocument::class)->find($id);
+    
+            if (!$user) {
+                throw new \Exception('User not found.');
+            }
+    
+            if ($request->get('email') && $this->checkEmail($request->get('email'), $id)) {
+                throw new \Exception('Email is already in use.');
+            }
+    
+            $fieldsToUpdate = ['email', 'password', 'name', 'surname', 'telephone'];
+            foreach ($fieldsToUpdate as $field) {
+                $value = $request->get($field);
+                if ($value !== null) {
+                    $setterMethod = 'set' . ucfirst($field);
+                    $user->$setterMethod($value);
+                }
+            }
+    
+            if ($request->get('current_account')) {
+                $user->setCurrentAccount($request->get('current_account'));
+            }
+    
+            $pricePerHour = $request->get('price_per_hour');
+            if ($pricePerHour !== null) {
+                $user->setPricePerHour($pricePerHour);
+            }
+    
+            $image = $request->files->get('image');
+            $dir = $this->publicDirectory;
+            $resourcesPath = '/resources/images/users/';
+    
+            if ($image) {
+                $fileName = 'specialist_' . $user->getId() . '.' . $image->getClientOriginalExtension();
+                $image->move($dir . $resourcesPath, $fileName);
+                $user->setImage($resourcesPath . $fileName);
+            }
+    
+            $this->documentManager->persist($user);
+            $this->documentManager->flush();
+    
+            $this->logger->info('User ' . $user->getId() . ' updated successfully');
+    
+            return true;
+            
+        } catch (Exception $e) {
+            $this->logger->error('User update failed: ' . $e->getMessage());
+            return new Response('Ha habido un error al actualizar el usuario. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function registerAdmin(Request $request)
+    {
+        try {
+            $user = new UsersDocument();
+
+            if ($this->checkEmail($request->get('email'))) {
+                throw new \Exception('Email is in use.');
+            }
+
+            $user->setEmail($request->get('email'));
+            $user->setPassword($this->hashPassword($request->get('password'), $user));
+            $user->setName($request->get('name'));
+            $user->setSurname($request->get('surname'));
+            $user->setRoles([RolesConstants::ROLE_ADMIN]);
+
+            $this->documentManager->persist($user);
+            $this->documentManager->flush();
+
+            $this->logger->info('Admin ' . $user->getId() . ' registered successfully');
+
+            return true;
+
+        } catch(Exception $e) {
+            $this->logger->error('Admin register failed: ' . $e->getMessage());
+            return new Response('Ha habido un error al registrar el administrador. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function resendEmail(int $id) {
+        $user = $this->userRepository->findUserById($id);
+    
+        if (!$user) {
+            $this->logger->error('User with ID ' . $id . ' not found');
+            return new Response('User not found.', Response::HTTP_NOT_FOUND);
+        }
+    
+        try {
+            $verificationLink = $this->router->generate('app_verify_email', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
+            
+            $this->logger->info('Resend verification email to User ' . $user->getId());
+    
+            $this->emailService->sendVerificationEmail($user->getEmail(), $verificationLink);
+            
+            return new Response('Verification email resent successfully.', Response::HTTP_OK);
+        } catch (Exception $e) {
+            $this->logger->error('Resent verification email failed: '. $e->getMessage());
+            return new Response('Error trying to resend the email.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

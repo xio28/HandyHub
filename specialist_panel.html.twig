@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('panels-css') }}
+    {{ encore_entry_link_tags('table') }}
+{% endblock %}
+
+{% block body %}
+    <div id="logo">
+        <a class="panel-logo" href="{{ path('app_index') }}">
+            <span class="big-logo">HandyHub</span>
+            <span class="small-logo">HH</span>
+        </a>
+    </div>
+    <div id="left-menu">
+        <ul>
+            <li id="users-page" class="active">
+                <a href="#">
+                    <span class="material-icons">
+                        person
+                    </span>
+                    <h3>Mi cuenta</h3>
+                </a>
+            </li>
+            <li id="contracts-page">
+                <a href="#">
+                    <span class="material-icons">
+                        description
+                    </span>
+                    <h3>Contratos</h3>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_logout') }}">
+                    <span class="material-icons">
+                        logout
+                    </span>
+                    <h3>Logout</h3>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="main-content">
+        <div id="header">
+            <div class="header-left float-left">
+                <span id="toggle-left-menu" class="material-icons">
+                    menu
+                </span>
+            </div>
+            <div class="header-right float-right">
+                <span class="material-icons">
+                    person
+                </span>
+            </div>
+        </div>
+
+        <div id="page-container">
+            <div id="content-users-page" class="page active">
+                <div class="card">
+                    {# aquí va el formulario #}
+                </div>
+            </div>
+            <div id="content-contracts-page" class="page">
+                <div class="card">
+                    <table>
+                        <caption>Users</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Surname</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Telephone</th>
+                                <th scope="col">Roles</th>
+                                <th scope="col">Verified</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {# {% for user in users %} #}
+                            <tr>
+                                <td data-label="ID">{#{{ user.id }}#}</td>
+                                <td data-label="Name">{#{{ user.name }}#}</td>
+                                <td data-label="Surname">{#{{ user.surname }}#}</td>
+                                <td data-label="Email">{#{{ user.email }}#}</td>
+                                <td data-label="Telephone">{#{{ user.telephone is defined ? user.telephone : 'N/A' }}#}</td>
+                                <td data-label="Roles">{#{{ user.roles|first }}#}</td>
+                                <td class="{#{{ user.isVerified is defined and user.isVerified ? 'verified' : 'no-verified' }}"#} data-label="Verified"">{#{{ user.isVerified is defined ? user.isVerified : 'N/A' }}#}</td>
+                                <td data-label="">
+                                    <button class="btn edit-contract">
+                                        <span class="material-icons">thumb_up</span>
+                                    </button>
+                                    <button class="btn trash-contract" data-id="{#{{ user.id }}#}">
+                                        <span class="material-icons">thumb_down_alt</span>
+                                    </button>
+                                    <button class="btn check-contract">
+                                        <span class="material-icons">done_all</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            {# {% endfor %} #}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('panels') }}
+{% endblock %}

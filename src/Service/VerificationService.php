@@ -19,11 +19,9 @@ class VerificationService
     }
 
     public function verifyUser($id) {
-        // Comprobar si el usuario existe
         $user = $this->userRepository->findUserById($id);
     
         if (!$user) {
-            // Si el usuario no existe, devolver un mensaje de error personalizado
             return new Response('El enlace al que estás intentando acceder ya no existe.', Response::HTTP_NOT_FOUND);
         }
 

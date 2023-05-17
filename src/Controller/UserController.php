@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Document\UsersDocument;
 use App\Service\UserService;
 use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,13 +16,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
 {
+    private $documentManager;
+    private $userService;
+
+    public function __construct(UserService $userService, DocumentManager $documentManager)
+    {
+        $this->documentManager = $documentManager;
+        $this->userService = $userService;
+    }
+
     /**
      * @Route("/register/client", name="app_client_register")
      */
-    public function registerClient(Request $request, UserService $userService)
+    public function registerClient(Request $request)
     {
         if ($request->isMethod('POST')) {
-            $success = $userService->registerClient($request);
+            $success = $this->userService->registerClient($request);
             
             if ($success) {
                 return $this->redirectToRoute('app_index');
@@ -37,12 +48,12 @@ class UserController extends AbstractController
     /**
      * @Route("/register/specialist", name="app_specialist_register")
      */
-    public function registerSpecialist(Request $request, UserService $userService, CategoryRepository $categoryRepository)
+    public function registerSpecialist(Request $request, CategoryRepository $categoryRepository)
     {
         $categories = $categoryRepository->getAll();
 
         if ($request->isMethod('POST')) {
-            $success = $userService->registerSpecialist($request);
+            $success = $this->userService->registerSpecialist($request);
             
             if ($success) {
                 return $this->redirectToRoute('app_index');
@@ -58,11 +69,59 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/register/admin", name="app_admin_register")
+     */
+    public function registerAdmin(Request $request)
+    {
+        if ($request->isMethod('POST')) {
+            $user = new UsersDocument();
+            $success = $this->userService->registerAdmin($request);
+            
+            $this->documentManager->flush();
+            $adminId = $user->getId();
+
+            if ($success) {
+                return new JsonResponse([
+                    'success' => true, 
+                    'adminId' => $adminId
+                ]);
+            } else {
+                throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
+            }
+        } 
+    }
+
+    /**
+     * @Route("/update/client", name="app_client_update")
+     */
+    public function updateClient(Request $request)
+    {
+        if ($request->isMethod('POST')) {
+            $success = $this->userService->registerSpecialist($request);
+            
+            if ($success) {
+                return $this->redirectToRoute('app_index');
+            } else {
+                throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
+            }
+        } 
+    }
+    
+    /**
+     * @Route("/resend_email/{id}", name="app_resend_email", methods={"POST"})
+     */
+    public function resendEmail(int $id)
+    {
+        $response = $this->userService->resendEmail($id);
+        return $response;
+    }
+
+    /**
      * @Route("/delete_user/{id}", name="app_delete_user", methods={"DELETE"})
     */
-    public function deleteUser(int $id, UserService $userService): Response
+    public function deleteUser(int $id): Response
     {
-        $userService->deleteUserById($id);
+        $this->userService->deleteUserById($id);
 
         return new JsonResponse(['success' => true]);
     }
@@ -70,10 +129,10 @@ class UserController extends AbstractController
     /**
      * @Route("/get/users", name="app_get_users")
      */
-    public function getUsers(UserService $userService)
+    public function getUsers()
     {
         return $this->render('forms/get_users.html.twig', [
-            'users' => $userService->getUsers()
+            'users' => $this->userService->getUsers()
         ]);
     }
 

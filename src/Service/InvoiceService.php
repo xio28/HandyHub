@@ -5,7 +5,7 @@ namespace App\Service;
 use Knp\Snappy\Pdf;
 use Twig\Environment;
 
-class InvoiceGenerator
+class InvoiceService
 {
     private $snappy;
     private $twig;

@@ -18,108 +18,33 @@
     <main class="services">
         <h2 class="services__h2">Encuentra al profesional que necesitas</h2>
         <section class="services__section">
-            <div class="card-item">
-                <img class="card-item--img" src="{{ asset('resources/images/users/person-1.jpg') }}" alt="pro-one">
-                <div class="card-item__info">
-                    <strong>Nombre, apellidos</strong>
-                    <p>
-                        Precio/hora 
-                        <span class="material-icons my-check">
-                            check_box
-                        </span>
-                        <span class="material-icons not-available">
-                            event_busy
-                        </span>        
-                    </p>
-                    <p>Especialidad</p>
-                    <button class="card-button-contract">Contratar</button>
-                </div>
-            </div>
-            <div class="card-item">
-                <img class="card-item--img" src="{{ asset('resources/images/users/person-2.jpg') }}" alt="pro-two">
-                <div class="card-item__info">
-                    <strong>Nombre, apellidos</strong>
-                    <p>
-                        Precio/hora 
-                        <span class="material-icons my-check">
-                            check_box
-                        </span>
-                        <span class="material-icons not-available">
-                            event_busy
-                        </span>        
-                    </p>
-                    <p>Especialidad</p>
-                    <button class="card-button-contract">Contratar</button>
-                </div>
-            </div>
-            <div class="card-item">
-                <img class="card-item--img" src="{{ asset('resources/images/users/person-3.jpg') }}" alt="pro-three">
-                <div class="card-item__info">
-                    <strong>Nombre, apellidos</strong>
-                    <p>
-                        Precio/hora 
-                        <span class="material-icons my-check">
-                            check_box
-                        </span>
-                        <span class="material-icons not-available">
-                            event_busy
-                        </span>        
-                    </p>
-                    <p>Especialidad</p>
-                    <button class="card-button-contract">Contratar</button>
-                </div>
-            </div>
-            <div class="card-item">
-                <img class="card-item--img" src="{{ asset('resources/images/users/person-4.jpg') }}" alt="pro-four">
-                <div class="card-item__info">
-                    <strong>Nombre, apellidos</strong>
-                    <p>
-                        Precio/hora
-                        <span class="material-icons my-check">
-                            check_box
-                        </span>
-                        <span class="material-icons not-available">
-                            event_busy
-                        </span>        
-                    </p>
-                    <p>Especialidad</p>
-                    <button class="card-button-contract">Contratar</button>
-                </div>
-            </div>
-            <div class="card-item">
-                <img class="card-item--img" src="{{ asset('resources/images/users/person-5.jpg') }}" alt="pro-five">
-                <div class="card-item__info">
-                    <strong>Nombre, apellidos</strong>
-                    <p>
-                        Precio/hora
-                        <span class="material-icons my-check">
-                            check_box
-                        </span>
-                        <span class="material-icons not-available">
-                            event_busy
-                        </span>        
-                    </p>
-                    <p>Especialidad</p>
-                    <button class="card-button-contract">Contratar</button>
-                </div>
-            </div>
-            <div class="card-item last-person">
-                <img class="card-item--img" src="{{ asset('resources/images/users/person-6.jpg') }}" alt="pro-six">
-                <div class="card-item__info">
-                    <strong>Nombre, apellidos</strong>
-                    <p>
-                        Precio/hora
-                        <span class="material-icons my-check">
-                            check_box
-                        </span>
-                        <span class="material-icons not-available">
-                            event_busy
-                        </span>        
-                    </p>
-                    <p>Especialidad</p>
-                    <button class="card-button-contract">Contratar</button>
-                </div>
-            </div>
+                {% for specialist in specialists %}
+                    <div class="card-item">
+                        <img class="card-item--img" src="{{ asset(specialist.image) }}" alt="pro-one">
+                        <div class="card-item__info">
+                            <strong>{{ specialist.name }}, {{ specialist.surname }}</strong>
+                            <p class="font-bold">{{ specialist.category.category }}</p>
+                                <div class="flex-element">
+                                    <p class="price">{{ specialist.pricePerHour}}€</p>
+                                    {% if specialist.isAvailable %}
+                                        <span class="material-icons my-check">
+                                            check_box
+                                        </span>
+                                    {% else %}
+                                        <span class="material-icons not-available">
+                                            event_busy
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </p>
+                            <form action="{{ path('app_contract_summary') }}" method="POST">
+                                <input type="hidden" name="clientId" value="{{ app.user.id|default('') }}" />
+                                <input type="hidden" name="specialistId" value="{{ specialist.id }}" />
+                                <button id="contractBtn" type="submit" class="card-button-contract">Contratar</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
         </section>
     </main>
 

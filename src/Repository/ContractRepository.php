@@ -10,43 +10,50 @@ class ContractRepository
 {
     private $documentManager;
 
+    /**
+     * ContractRepository constructor.
+     *
+     * @param DocumentManager $documentManager The DocumentManager instance.
+     */
     public function __construct(DocumentManager $documentManager)
     {
         $this->documentManager = $documentManager;
     }
 
-    public function getAll(): ?UsersDocument
+    /**
+     * Get all contracts.
+     *
+     * @return ContractsDocument[]|null An array of ContractsDocument instances, or null if none found.
+     */
+    public function getAll(): ?array
     {
-        return $this->documentManager->getRepository(UsersDocument::class)->findAll();
+        return $this->documentManager->getRepository(ContractsDocument::class)->findAll();
     }
 
-    public function findUserById(int $id): ?UsersDocument
+    /**
+     * Check if the logged-in user ID matches the client ID in a contract.
+     *
+     * @param int $contractId The ID of the contract.
+     * @param int $userId The ID of the logged-in user.
+     * @return bool True if the IDs match, false otherwise.
+     */
+    public function userInContract(int $contractId, int $userId): bool
     {
-        return $this->documentManager->getRepository(UsersDocument::class)->find($id);
-    }
+        /** 
+         * @var ContractsDocument $contract 
+         */
+        $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($contractId);
+        
+        if ($contract && $contract->getClient()) {
+            /** 
+             * @var UsersDocument $client
+             */
+            $client = $contract->getClient();
 
-    public function findUserByEmail(string $email): ?UsersDocument
-    {
-        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['email' => $email]);
-    }
-
-    public function getIdByEmail(string $email): ?string
-    {
-        $user = $this->findUserByEmail($email);
-
-        return $user ? $user->getId() : null;
-    }
-
-    public function getRoleByEmail(string $email): ?string
-    {
-        $user = $this->findUserByEmail($email);
-
-        return $user ? $user->getRole() : null;
-    }
-
-    public function getUsersByRole(string $role): ?string
-    {
-        return $this->documentManager->getRepository(UsersDocument::class)->findOneBy(['role' => $role]);
+            return $client->getId() === $userId;
+        }
+        
+        return false;
     }
 
 }

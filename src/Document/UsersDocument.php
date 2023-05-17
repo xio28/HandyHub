@@ -65,7 +65,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @MongoDB\Field(type="float")
      */
-    private $price_per_hour;
+    private $pricePerHour;
 
     /**
      * @MongoDB\Field(type="bool")
@@ -213,7 +213,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
         $this->image = $image;
     }
 
-    public function getPricePerHour(): float
+    public function getPricePerHour(): ?float
     {
         return $this->pricePerHour;
     }
