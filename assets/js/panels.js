@@ -185,7 +185,7 @@ $(function() {
     });
 
     $('.resend-btn').click(function() {
-        var userId = $(this).data('id');
+        let userId = $(this).data('id');
         $.post({
             url: '/resend_email/' + userId,
             success: function(response) {
@@ -199,7 +199,7 @@ $(function() {
 
     $('.trash-contract').on('click', function(event) {
         event.preventDefault();
-        var contractId = $(this).data('id');
+        let contractId = $(this).data('id');
 
         // Realizar la solicitud AJAX
         $.ajax({
@@ -216,7 +216,7 @@ $(function() {
 
     $('#addAdmin').on('click', function(e) {
         e.preventDefault();
-        var formData = $('form').serialize();
+        let formData = $('form').serialize();
         
         $.ajax({
             url: '/register/admin',
@@ -234,7 +234,7 @@ $(function() {
     });
     
     function updateUserTable(admin) {
-        var row = $('<tr>');
+        let row = $('<tr>');
         row.append($('<td>').text(admin.id));
         row.append($('<td>').text(admin.name));
         row.append($('<td>').text(admin.surname));
@@ -254,25 +254,39 @@ $(function() {
         $('table tbody').append(row);
     }
 
-    $('#updateCategoryForm').on('submit', function(event) {
-        event.preventDefault();
-        
-        var categoryId = $(this).data('category-id');
-        var formData = $(this).serialize();
-        
+    $(document).mouseup(function(e) {
+        var container = $("#editPopup");
+    
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.hide();
+        }
+    });
+
+    $('.edit-category').on('click', function() {
+        let id = $(this).data('id');
+        $('#categoryId').val(id);
+        $('#editPopup').show();
+    });
+
+    $('#submitEdit').click(function() {
+        let id = $('#categoryId').val();
+        let name = $('#categoryName').val();
         $.ajax({
-            url: '/update_category/' + categoryId,
+            url: '/update_category/' + id,
             method: 'PUT',
-            data: formData,
+            data: { name: name },
             success: function(response) {
                 if (response.success) {
-                    location.reload();
+                    // Actualizar la categoría en la tabla
+                    $('button[data-id="' + id + '"]').closest('tr').children().eq(1).text(name);
+                    // Ocultar el popup
+                    $('#editPopup').hide();
                 } else {
-                    console.error(response.message);
+                    alert('Error al actualizar la categoría');
                 }
             },
-            error: function(xhr, status, error) {
-                console.error(error);
+            error: function() {
+                alert('Error al actualizar la categoría');
             }
         });
     });

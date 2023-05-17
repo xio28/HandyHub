@@ -8,6 +8,15 @@
 {% endblock %}
 
 {% block body %}
+    <div id="editPopup" style="display: none;">
+        <form id="editForm">
+            <input type="hidden" id="categoryId" name="id" value="">
+            <label for="categoryName">Nombre de la categoría</label>
+            <input type="text" id="categoryName" name="name" value="">
+            <button type="button" id="submitEdit">Editar</button>
+        </form>
+    </div>
+
     <div id="logo">
         <a class="panel-logo" href="{{ path('app_index') }}">
             <span class="big-logo">HandyHub</span>
@@ -210,10 +219,10 @@
                             {% for contract in contracts %}
                             <tr>
                                 <td data-label="ID">{{ contract.id }}</td>
-                                <td data-label="Name">{{ contract.client }}</td>
-                                <td data-label="Surname">{{ contract.specialist }}</td>
-                                <td data-label="Email">{{ contract.date }}</td>
-                                <td data-label="Email">{{ contract.hourIn }}</td>
+                                <td data-label="Name">{{ contract.client.id }}</td>
+                                <td data-label="Surname">{{ contract.specialist.id }}</td>
+                                <td data-label="Fecha">{{ contract.date|date('d-m-Y') }}</td>
+                                <td data-label="Hora de comienzo">{{ contract.hourIn }}</td>
                                 <td data-label="End hour">
                                     {% if contract.status != 'in_progress' %}
                                         {{ contract.hourOut }}

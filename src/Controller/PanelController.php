@@ -61,9 +61,9 @@ class PanelController extends AbstractController
      */
     public function panelClient(): Response
     {
-        $contracts = $this->contractRepository->getAll();
-
         $user = $this->security->getUser();
+
+        $contracts = $this->contractRepository->getContractsByUserId($user->getId());
 
         return $this->render('panels/client_panel.html.twig', [
             'contracts' => $contracts,
@@ -79,10 +79,13 @@ class PanelController extends AbstractController
      */
     public function panelSpecialist(): Response
     {
-        $contracts = $this->contractRepository->getAll();
+        $user = $this->security->getUser();
 
-        return $this->render('panels/client_panel.html.twig', [
+        $contracts = $this->contractRepository->getContractsByUserId($user->getId());
+
+        return $this->render('panels/specialist_panel.html.twig', [
             'contracts' => $contracts,
+            'specialists' => $user
         ]);
     }
 }

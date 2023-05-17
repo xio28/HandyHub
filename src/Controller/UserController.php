@@ -113,6 +113,26 @@ class UserController extends AbstractController
         } 
     }
     
+
+    /**
+     * @Route("/update/specialist", name="app_specialist_update")
+     */
+    public function updateSpecialist(Request $request)
+    {
+        if ($request->isMethod('POST')) {
+            $user = $this->security->getUser();
+            $userId = $user->getId();
+
+            $success = $this->userService->updateSpecialist($request, $userId);
+            
+            if ($success) {
+                return $this->redirectToRoute('app_specialist_panel');
+            } else {
+                throw new \Exception('Ha habido un error al actualizar.');
+            }
+        } 
+    }
+    
     /**
      * @Route("/resend_email/{id}", name="app_resend_email", methods={"POST"})
      */

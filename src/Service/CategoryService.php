@@ -43,6 +43,18 @@ class CategoryService {
         }
     }
 
+    public function updateCategoryById(int $id, string $name): ?CategoriesDocument
+    {
+        $category = $this->categoryRepository->findCategoryById($id);
+
+        if ($category !== null) {
+            $category->setCategory($name);
+            $this->documentManager->flush();
+        }
+
+        return $category;
+    }
+
     public function deleteCategoryById(int $id): void
     {
         $category = $this->categoryRepository->findCategoryById($id);

@@ -31,30 +31,48 @@ class ContractRepository
     }
 
     /**
-     * Check if the logged-in user ID matches the client ID in a contract.
+     * Get contracts by user ID.
      *
-     * @param int $contractId The ID of the contract.
-     * @param int $userId The ID of the logged-in user.
-     * @return bool True if the IDs match, false otherwise.
+     * @param int $userId The ID of the user.
+     * @return ContractsDocument[]|null An array of ContractsDocument instances, or null if none found.
      */
-    public function userInContract(int $contractId, int $userId): bool
+    public function getContractsByUserId(int $userId): ?array
     {
-        /** 
-         * @var ContractsDocument $contract 
-         */
-        $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($contractId);
-        
-        if ($contract && $contract->getClient()) {
-            /** 
-             * @var UsersDocument $client
-             */
-            $client = $contract->getClient();
+        $contractRepository = $this->documentManager->getRepository(ContractsDocument::class);
 
-            return $client->getId() === $userId;
+        $contracts = $contractRepository->findBy(['client' => $userId]);
+        if (!$contracts) {
+            $contracts = $contractRepository->findBy(['specialist' => $userId]);
         }
-        
-        return false;
+
+        return $contracts;
     }
+
+    // /**
+    //  * Check if the logged-in user ID matches the client ID in a contract.
+    //  *
+    //  * @param int $contractId The ID of the contract.
+    //  * @param int $userId The ID of the logged-in user.
+    //  * @return bool True if the IDs match, false otherwise.
+    //  */
+    // public function userInContract(int $contractId, int $userId): bool
+    // {
+    //     /** 
+    //      * @var ContractsDocument $contract 
+    //      */
+    //     $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($contractId);
+        
+    //     if ($contract && $contract->getClient()) {
+    //         /** 
+    //          * @var UsersDocument $client
+    //          */
+    //         $client = $contract->getClient();
+
+    //         return $client->getId() === $userId;
+    //     }
+        
+    //     return false;
+    // }
 
 }
 

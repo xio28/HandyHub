@@ -64,6 +64,11 @@ class ContractsDocument
     private $status = self::STATUS_IN_PROGRESS;
 
     /**
+     * @MongoDB\Field(type="bool")
+     */
+    private $paid = false;
+
+    /**
      * Get the ID of the contract.
      *
      * @return int|null The ID of the contract, or null if it hasn't been set.
@@ -87,9 +92,9 @@ class ContractsDocument
      * Set the client for the contract.
      *
      * @param UsersDocument|null $client The client to set.
-     * @return self The contract, for chaining.
+     * @return ContractsDocument The contract, for chaining.
      */
-    public function setClient(?UsersDocument $client): self
+    public function setClient(?UsersDocument $client): ContractsDocument
     {
         $this->client = $client;
 
@@ -107,102 +112,178 @@ class ContractsDocument
     }
 
     /**
-     * Set the client for the contract.
+     * Set the specialist for the contract.
      *
-     * @param UsersDocument|null $client The client to set.
-     * @return self The contract, for chaining.
+     * @param UsersDocument|null $specialist The specialist to set.
+     * @return ContractsDocument The contract, for chaining.
      */
-    public function setSpecialist(?UsersDocument $specialist): self
+    public function setSpecialist(?UsersDocument $specialist): ContractsDocument
     {
         $this->specialist = $specialist;
 
         return $this;
     }
 
+    /**
+     * Get the date of the contract.
+     *
+     * @return \DateTime|null The date of the contract, or null if it hasn't been set.
+     */
     public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    public function setDate(?\DateTime $date): self
+    /**
+     * Set the date for the contract.
+     *
+     * @param \DateTime|null $date The date to set.
+     * @return ContractsDocument The contract, for chaining.
+     */
+    public function setDate(?\DateTime $date): ContractsDocument
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getHourIn(): ?\DateTime
+    /**
+     * Get the starting hour of the contract.
+     *
+     * @return string|null The starting hour of the contract, or null if it hasn't been set.
+     */
+    public function getHourIn(): ?string
     {
         return $this->hourIn;
     }
 
-    public function setHourIn(?\DateTime $hourIn): self
+    /**
+     * Set the starting hour for the contract.
+     *
+     * @param string|null $hourIn The starting hour to set.
+     * @return ContractsDocument The contract, for chaining.
+     */
+    public function setHourIn(?string $hourIn): ContractsDocument
     {
         $this->hourIn = $hourIn;
 
         return $this;
     }
 
-    public function getHourOut(): ?\DateTime
+    /**
+     * Get the ending hour of the contract.
+     *
+     * @return string|null The ending hour of the contract, or null if it hasn't been set.
+     */
+    public function getHourOut(): ?string
     {
         return $this->hourOut;
     }
 
-    public function setHourOut(?\DateTime $hourOut): self
+    /**
+     * Set the ending hour for the contract.
+     *
+     * @param string|null $hourOut The ending hour to set.
+     * @return ContractsDocument The contract, for chaining.
+     */
+    public function setHourOut(?string $hourOut): ContractsDocument
     {
         $this->hourOut = $hourOut;
 
         return $this;
     }
 
+    /**
+     * Get the price per hour for the contract.
+     *
+     * @return float|null The price per hour for the contract, or null if it hasn't been set.
+     */
     public function getPricePerHour(): ?float
     {
         return $this->pricePerHour;
     }
 
-    public function setPricePerHour(?float $pricePerHour): self
+    /**
+     * Set the price per hour for the contract.
+     *
+     * @param float|null $pricePerHour The price per hour to set.
+     * @return ContractsDocument The contract, for chaining.
+     */
+    public function setPricePerHour(?float $pricePerHour): ContractsDocument
     {
         $this->pricePerHour = $pricePerHour;
 
         return $this;
     }
 
+    /**
+     * Get the tax for the contract.
+     *
+     * @return float The tax for the contract.
+     */
     public function getTax(): float
     {
         return $this->tax;
     }
 
-    public function setTax(float $tax): self
+    /**
+     * Set the tax for the contract.
+     *
+     * @param float $tax The tax to set.
+     * @return ContractsDocument The contract, for chaining.
+     */
+    public function setTax(float $tax): ContractsDocument
     {
         $this->tax = $tax;
 
         return $this;
     }
 
+    /**
+     * Get the total price for the contract.
+     *
+     * @return float|null The total price for the contract, or null if it hasn't been set.
+     */
     public function getTotalPrice(): ?float
     {
         return $this->totalPrice;
     }
 
-    public function setTotalPrice(?float $totalPrice): self
+    /**
+     * Set the total price for the contract.
+     *
+     * @param float|null $totalPrice The total price to set.
+     * @return ContractsDocument The contract, for chaining.
+     */
+    public function setTotalPrice(?float $totalPrice): ContractsDocument
     {
         $this->totalPrice = $totalPrice;
 
         return $this;
     }
 
+    /**
+     * Get the status of the contract.
+     *
+     * @return string The status of the contract.
+     */
     public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    /**
+     * Set the status for the contract.
+     *
+     * @param string $status The status to set.
+     * @return ContractsDocument The contract, for chaining.
+     */
+    public function setStatus(string $status): ContractsDocument
     {
         $this->status = $status;
 
         return $this;
     }
 }
-
 
 ?>

@@ -127,3 +127,11 @@
     font-weight: bold;
     font-size: calc(1em + .8vw);
 }
+
+#contractBtn:disabled {
+    background-color: grey;
+}
+
+#contractBtn:disabled:hover {
+    background-color: grey;
+}

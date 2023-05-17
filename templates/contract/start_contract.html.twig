@@ -21,16 +21,16 @@
                     <fieldset>
                         <legend>Pre contrato</legend>
                         <div class="d-flex">
-                            <input type="text" name="cName" class="" value="{{ clients.name }}" disabled>
-                            <input type="text" name="cSurname" class="" value="{{ clients.surname }}" disabled>
+                            <input type="text" name="cName" class="" value="{{ clients[0].name }}" disabled>
+                            <input type="text" name="cSurname" class="" value="{{ clients[0].surname }}" disabled>
                         </div>
                         <div class="d-flex">
-                            <input type="text" name="cAddress" class="" value="{{ clients.address }}" disabled>
-                            <input type="text" name="cTelephone" class="" value="{{ clients.telephone }}" disabled>
+                            <input type="text" name="cAddress" class="" value="{{ clients[0].address }}" disabled>
+                            <input type="text" name="cTelephone" class="" value="{{ clients[0].telephone }}" disabled>
                         </div>
                         <div class="d-flex name">
-                            <input type="text" name="sName" class="" value="{{ specialists.name }}" disabled>
-                            <input type="text" name="sSurname" class="" value="{{ specialists.surname }}" disabled>
+                            <input type="text" name="sName" class="" value="{{ specialists['name'] }}" disabled>
+                            <input type="text" name="sSurname" class="" value="{{ specialists['surname'] }}" disabled>
                         </div>
                         <div class="d-flex">
                             <input type="text" name="sCategory" class="" value="{{ specialists.category }}" disabled>

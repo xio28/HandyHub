@@ -1,11 +1,14 @@
 <?php
 namespace App\Controller;
 
+use App\Document\ContractsDocument;
 use App\Service\ContractService;
 use App\Service\InvoiceService;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,15 +17,16 @@ class ContractController extends AbstractController
 {
     private $contractService;
 
-    public function __construct(ContractService $contractService) {
+    public function __construct(ContractService $contractService, DocumentManager $documentManager) {
         $this->contractService = $contractService;
+        $this->documentManager = $documentManager;
     }
 
     /**
      * @Route("/summary/contract", name="app_contract_summary")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function summaryContract(Request $request, LoggerInterface $logger)
+    public function summaryContract(Request $request)
     {
         $user = $this->getUser();
         $roles = $user->getRoles();
@@ -30,13 +34,12 @@ class ContractController extends AbstractController
         $clientId = $request->get('clientId');
         $specialistId = $request->get('specialistId');
     
-        if (in_array('ROLE_SPECIALIST', $roles)) {
+        if (in_array('ROLE_SPECIALIST', $roles) || in_array('ROLE_ADMIN', $roles) || in_array('ROLE_SUPERADMIN', $roles)) {
             return $this->redirectToRoute('app_index');
         }
     
         $info = $this->contractService->preContract($request);
-        $logger->info(var_export($info, true));
-    
+        
         return $this->render('contract/start_contract.html.twig', [
             'clients' => $info['clients'],
             'specialists' => $info['specialists'],
@@ -54,83 +57,43 @@ class ContractController extends AbstractController
         $success = $this->contractService->registerContract($request);
         
         if ($success) {
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('app_client_panel');
         } else {
-            throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
+            throw new \Exception('Error in managing contract.');
         }
     }
 
-    /**
-     * @Route("/reject/contract/{id}", name="app_contract_reject")
-     */
-    public function rejectContract(int $id)
-    {
-        $success = $this->contractService->cancelContract($id);
-    }
+    // /**
+    //  * @Route("/reject/contract/{id}", name="app_contract_reject")
+    //  */
+    // public function rejectContract(int $id)
+    // {
+    //     $success = $this->contractService->cancelContract($id);
+    // }
 
     /**
-     * @Route("/complete/contract/{id}", name="app_contract_reject")
+     * @Route("/complete/contract/", name="app_contract_complete")
      */
-    public function completeContract(int $id)
+    public function completeContract(Request $request)
     {
-        $contract->setStatus(ContractsDocument::STATUS_COMPLETED);
+        $contractId = $request->get('contractId');
+        $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($contractId);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->flush();
+        if ($contract === null) {
+            return new JsonResponse([
+                'success' => false, 
+                'message' => 'Contract not found'
+            ], 
+            404);
+        }
+
+        $result = $this->contractService->finishContract($contract);
+        
+        if ($result instanceof Response) {
+            return $result;
+        }
 
         return new JsonResponse(['success' => true]);
     }
-
-    // /**
-    //  * @Route("/finish/contract/", name="app_contract_finish")
-    //  */
-    // public function finalize($id): Response
-    // {
-    //     // Aquí buscarías el contrato por su id, por ejemplo:
-    //     $contract = $this->getDoctrine()->getRepository(Contract::class)->find($id);
-
-    //     // Asegúrate de que el contrato existe y de que puede ser finalizado
-
-    //     // Generar la factura en PDF
-    //     $pdf = $invoiceGenerator->generateInvoice($contract);
-
-    //     // Aquí deberías marcar el contrato como finalizado y guardar los cambios en la base de datos
-
-    //     // Devolver la factura en PDF como respuesta
-    //     return new Response(
-    //         $pdf,
-    //         200,
-    //         [
-    //             'Content-Type' => 'application/pdf',
-    //             'Content-Disposition' => 'inline; filename="invoice.pdf"'
-    //         ]
-    //     );
-    // }
-
-    // /**
-    //  * @Route("/finish/contract/{id}", name="app_contract_finish")
-    //  */
-    // public function finalize($id, InvoiceGenerator $invoiceGenerator): Response
-    // {
-    //     // Aquí buscarías el contrato por su id, por ejemplo:
-    //     $contract = $this->getDoctrine()->getRepository(Contract::class)->find($id);
-
-    //     // Asegúrate de que el contrato existe y de que puede ser finalizado
-
-    //     // Generar la factura en PDF
-    //     $pdf = $invoiceGenerator->generateInvoice($contract);
-
-    //     // Aquí deberías marcar el contrato como finalizado y guardar los cambios en la base de datos
-
-    //     // Devolver la factura en PDF como respuesta
-    //     return new Response(
-    //         $pdf,
-    //         200,
-    //         [
-    //             'Content-Type' => 'application/pdf',
-    //             'Content-Disposition' => 'inline; filename="invoice.pdf"'
-    //         ]
-    //     );
-    // }
 }
 ?>

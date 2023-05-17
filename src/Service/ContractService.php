@@ -40,13 +40,16 @@ class ContractService {
     
             $contract = new ContractsDocument();
     
-            $clientId = $preContract['clients']['id'];
-            $specialistId = $preContract['specialists']['id'];
+            $clientId = (int) $preContract['clients']['id'];
+            $specialistId = (int) $preContract['specialists']['id'];
             $client = $this->documentManager->getRepository(UsersDocument::class)->find($clientId);
             $specialist = $this->documentManager->getRepository(UsersDocument::class)->find($specialistId);
     
             $contract->setClient($client);
             $contract->setSpecialist($specialist);
+    
+            $specialist->setIsAvailable(false);
+            $this->documentManager->persist($specialist);
     
             $date = new \DateTime($preContract['date']);
             $contract->setDate($date);
@@ -69,7 +72,8 @@ class ContractService {
             $this->logger->error('Contract register failed: ' . $e->getMessage());
             return new Response('Ha habido un error al registrar el contrato. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }    
+    }
+    
 
     public function preContract(Request $request)
     {
@@ -89,52 +93,56 @@ class ContractService {
             }
     
             $specialistData = [];
+            $specialistId = (int) $request->get('specialistId');
+            
             foreach ($specialists as $specialist) {
-                $pricePerHour = $specialist->getPricePerHour();
-                $priceWithTax = $pricePerHour + ($pricePerHour * 0.07);
-                $specialistData[] = [
-                    'id' => $specialist->getId(),
-                    'name' => $specialist->getName(),
-                    'surname' => $specialist->getSurname(),
-                    'pricePerHour' => $specialist->getPricePerHour(),
-                    'category' => $specialist->getCategory() ? $specialist->getCategory()->getCategory() : null,
-                    'telephone' => $specialist->getTelephone(),
-                    'total' => $priceWithTax,
-                ];
-            }
+                if ($specialist->getId() === $specialistId) {
+                    $pricePerHour = $specialist->getPricePerHour();
+                    $priceWithTax = $pricePerHour + ($pricePerHour * 0.07);
                     
+                    $category = $specialist->getCategory();
+                    $categoryName = $category ? $category->getCategory() : null;
+                    
+                    $specialistData = [
+                        'id' => $specialist->getId(),
+                        'name' => $specialist->getName(),
+                        'surname' => $specialist->getSurname(),
+                        'pricePerHour' => $specialist->getPricePerHour(),
+                        'category' => $categoryName,
+                        'telephone' => $specialist->getTelephone(),
+                        'total' => $priceWithTax,
+                    ];
+                    
+                    break;
+                }
+            }
+    
+            $adjustedDateTime = $this->getAdjustedDateTime();
+    
             $this->session->set('preContract', [
                 'clients' => $clientData[0],
-                'specialists' => $specialistData[0],
-                'date' => $this->getAdjustedDateTime()['date'],
-                'hour' => $this->getAdjustedDateTime()['time'],
+                'specialists' => $specialistData,
+                'date' => $adjustedDateTime['date'],
+                'hour' => $adjustedDateTime['time'],
             ]);
-
+    
             return [
-                'clients' => $clientData[0],
-                'specialists' => $specialistData[0],
-                'date' => $this->getAdjustedDateTime()['date'],
-                'hour' => $this->getAdjustedDateTime()['time'],
+                'clients' => $clientData,
+                'specialists' => $specialistData,
+                'date' => $adjustedDateTime['date'],
+                'hour' => $adjustedDateTime['time'],
             ];
-                
-        } catch(Exception $e) {
+    
+        } catch (Exception $e) {
             $this->logger->error('Error in getting the data: ' . $e->getMessage());
             return new Response('Error in getting the data.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
-    public function finishContract(Request $request, int $id)
+    
+    public function finishContract(ContractsDocument $contract)
     {
         try {
-            $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($id);
-    
-            if (!$contract) {
-                throw new \Exception('Contract not found.');
-            }
-    
             $hourOut = $this->getAdjustedDateTime()['time'];
-    
-            $hourOut = \DateTime::createFromFormat('H:i', $hourOutTime);
     
             $totalPrice = $this->calculateTotal(
                 $contract->getHourIn(),
@@ -145,31 +153,36 @@ class ContractService {
     
             $contract->setHourOut($hourOut);
             $contract->setTotalPrice($totalPrice);
+            $contract->setStatus(ContractsDocument::STATUS_COMPLETED);
+    
+            $specialist = $contract->getSpecialist();
+            $specialist->setIsAvailable(true);
     
             $this->documentManager->persist($contract);
+            $this->documentManager->persist($specialist);
             $this->documentManager->flush();
     
-            // Resto de tu código...
-    
+            return true;
         } catch (Exception $e) {
             $this->logger->error('Finish contract failed: ' . $e->getMessage());
             return new Response('Ha habido un error al finalizar el contrato. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
+    }    
+    
 
-    public function cancelContract(int $id)
-    {
-        $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($id);
+    // public function cancelContract(int $id)
+    // {
+    //     $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($id);
     
-        if (!$contract) {
-            throw new \Exception('Contract not found.');
-        }
+    //     if (!$contract) {
+    //         throw new \Exception('Contract not found.');
+    //     }
     
-        $contract->setStatus(ContractsDocument::STATUS_REJECTED);
+    //     $contract->setStatus(ContractsDocument::STATUS_REJECTED);
     
-        $this->documentManager->persist($contract);
-        $this->documentManager->flush();
-    }
+    //     $this->documentManager->persist($contract);
+    //     $this->documentManager->flush();
+    // }
 
     /**
      * Get the current date and time, and adjust them according to specific rules:
@@ -180,16 +193,11 @@ class ContractService {
      */
     private function getAdjustedDateTime(): array
     {
-        /** 
-         * @var \DateTime $currentDateTime The current date and time. 
-         */
         $currentDateTime = new \DateTime();
-        
-        /** 
-         * @var int $currentHour The current hour. 
-         */
+        $currentDateTime->setTimezone(new \DateTimeZone('Europe/London')); // huso horario de Londres
         $currentHour = (int)$currentDateTime->format('H');
-        
+        $currentMinute = (int)$currentDateTime->format('i');
+    
         if ($currentHour >= 21 || $currentHour < 8) {
             if ($currentHour >= 21) {
                 $currentDateTime->modify('+1 day');
@@ -202,31 +210,33 @@ class ContractService {
                 $currentDateTime->modify('+1 day');
             }
         }
-        
-        // Convert the hour to a string in "hh:mm" format.
-        $hourString = str_pad($currentHour, 2, '0', STR_PAD_LEFT) . ":00";
-        
+    
+        $hourString = sprintf('%02d:%02d', $currentHour, $currentMinute);
+    
         return [
-            'date' => $currentDateTime->format('Y-m-d'), // date in "yyyy-mm-dd" format
+            'date' => $currentDateTime->format('Y-m-d'),
             'time' => $hourString,
         ];
     }
 
     /**
-     * Calculate the total payment based on the start time, end time and price per hour.
-     * - If the end time is less or equal to start time + 1 hour, the total payment is the price per hour.
+     * Calculate the total payment based on the start time, end time, and price per hour.
+     * - If the end time is less than or equal to the start time + 1 hour, the total payment is the price per hour.
      * - For each additional hour, the total payment is increased by the price per hour.
      * - At the end, taxes are applied to the total payment.
      *
-     * @param \DateTime $hourIn The start time of the contract.
-     * @param \DateTime $hourOut The end time of the contract.
+     * @param string $hourIn The start time of the contract in "HH:MM" format.
+     * @param string $hourOut The end time of the contract in "HH:MM" format.
      * @param float $pricePerHour The price per hour.
      * @param float $taxes The tax rate to be applied to the total payment.
      * @return float The total payment after considering the hours worked and applying taxes.
      */
-    public function calculateTotal(\DateTime $hourIn, \DateTime $hourOut, float $pricePerHour, float $taxes): float
+    public function calculateTotal(string $hourIn, string $hourOut, float $pricePerHour, float $taxes): float
     {
-        $hoursWorked = $hourOut->diff($hourIn)->h;
+        $startTime = strtotime($hourIn);
+        $endTime = strtotime($hourOut);
+
+        $hoursWorked = ceil(($endTime - $startTime) / 3600);
 
         if ($hoursWorked <= 1) {
             $total = $pricePerHour;

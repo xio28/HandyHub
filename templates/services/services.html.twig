@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ServicesController!{% endblock %}
+{% block title %}HandyHub | Servicios{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -18,33 +18,37 @@
     <main class="services">
         <h2 class="services__h2">Encuentra al profesional que necesitas</h2>
         <section class="services__section">
-                {% for specialist in specialists %}
-                    <div class="card-item">
-                        <img class="card-item--img" src="{{ asset(specialist.image) }}" alt="pro-one">
-                        <div class="card-item__info">
-                            <strong>{{ specialist.name }}, {{ specialist.surname }}</strong>
-                            <p class="font-bold">{{ specialist.category.category }}</p>
-                                <div class="flex-element">
-                                    <p class="price">{{ specialist.pricePerHour}}€</p>
-                                    {% if specialist.isAvailable %}
-                                        <span class="material-icons my-check">
-                                            check_box
-                                        </span>
-                                    {% else %}
-                                        <span class="material-icons not-available">
-                                            event_busy
-                                        </span>
-                                    {% endif %}
-                                </div>
-                            </p>
-                            <form action="{{ path('app_contract_summary') }}" method="POST">
-                                <input type="hidden" name="clientId" value="{{ app.user.id|default('') }}" />
-                                <input type="hidden" name="specialistId" value="{{ specialist.id }}" />
+            {% for specialist in specialists %}
+                <div class="card-item">
+                    <img class="card-item--img" src="{{ asset(specialist.image) }}" alt="pro-one">
+                    <div class="card-item__info">
+                        <strong>{{ specialist.name }}, {{ specialist.surname }}</strong>
+                        <p class="font-bold">{{ specialist.category.category }}</p>
+                            <div class="flex-element">
+                                <p class="price">{{ specialist.pricePerHour}}€</p>
+                                {% if specialist.isAvailable %}
+                                    <span class="material-icons my-check">
+                                        check_box
+                                    </span>
+                                {% else %}
+                                    <span class="material-icons not-available">
+                                        event_busy
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </p>
+                        <form action="{{ path('app_contract_summary') }}" method="POST">
+                            <input type="hidden" name="clientId" value="{{ app.user.id|default('') }}" />
+                            <input type="hidden" name="specialistId" value="{{ specialist.id }}" />
+                            {% if specialist.isAvailable %}
                                 <button id="contractBtn" type="submit" class="card-button-contract">Contratar</button>
-                            </form>
-                        </div>
+                            {% else %}
+                                <button id="contractBtn" type="submit" class="card-button-contract" disabled>Contratar</button>
+                            {% endif %}
+                        </form>
                     </div>
-                {% endfor %}
+                </div>
+            {% endfor %}
         </section>
     </main>
 

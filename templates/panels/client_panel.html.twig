@@ -52,7 +52,6 @@
             </div>
             <div class="dropdown mr-1">
                 <img class="user-image-panels" src="{{ asset(app.user.image) }}" alt="User image" />
-                {# <p>Hola, <span style="color: var(--red-color)">{{ app.user.name }}</span></p> #}
             </div>
         </div>
 
@@ -117,7 +116,7 @@
                                 <legend>Tarjeta</legend>
                                 <div>
                                     <label for="creditNumber">Número:</label>
-                                    <input type="number" id="creditNumber" min="16" max="16" name="creditNumber">
+                                    <input type="number" id="creditNumber" name="creditNumber">
                                 </div>
                                 <div>
                                     <label for="creditName">Nombre:</label>
@@ -175,13 +174,11 @@
                                 <td data-label="Precio por hora">{{ contract.pricePerHour }}</td>
                                 <td data-label="Impuestos">{{ contract.tax }}</td>
                                 <td data-label="Total">{{ contract.totalPrice }}</td>
-                                <td data-label="Estado">
-                                    {% if contract.status == 'in_progress' %}
-                                        <span class="in-progress">In Progress</span>
-                                    {% elseif contract.status == 'completed' %}
-                                        <span class="completed">Completed</span>
-                                    {% endif %}
-                                </td>
+                                {% if contract.status == 'in_progress' %}
+                                    <td data-label="Estado" class="edit-contract"></td>
+                                {% elseif contract.status == 'completed' %}
+                                    <td data-label="Estado" class="check-contract"></td>
+                                {% endif %}
                                 <td data-label="">
                                     {% if contract.status == 'completed' %}
                                         <button class="btn check-contract" type="button">

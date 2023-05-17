@@ -49,10 +49,12 @@ class CategoryController extends AbstractController
     /**
      * @Route("/update_category/{id}", name="app_update_category", methods={"PUT"})
      */
-    public function updateCategory(int $id, CategoryService $categoryService): Response
+    public function updateCategory(Request $request, int $id, CategoryService $categoryService): Response
     {
+        $name = $request->request->get('name');
+
         try {
-            $category = $categoryService->updateCategoryById($id);
+            $category = $categoryService->updateCategoryById($id, $name);
 
             return new JsonResponse(['success' => true, 'category' => $category]);
 
@@ -61,6 +63,7 @@ class CategoryController extends AbstractController
             return new JsonResponse(['success' => false, 'message' => 'Updated error.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
 
     /**
      * @Route("/get/categories", name="app_get_categories")
