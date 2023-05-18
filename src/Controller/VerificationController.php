@@ -10,6 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * Class VerificationController
+ *
+ * This controller handles routes related to email verification.
+ */
 class VerificationController extends AbstractController
 {
     private $router;
@@ -17,6 +22,14 @@ class VerificationController extends AbstractController
     private $verification;
     private $emailService;
 
+    /**
+     * VerificationController constructor.
+     *
+     * @param UrlGeneratorInterface $router
+     * @param UserRepository $userRepository
+     * @param VerificationService $verification
+     * @param EmailService $emailService
+     */
     public function __construct(UrlGeneratorInterface $router, UserRepository $userRepository, VerificationService $verification, EmailService $emailService)
     {
         $this->router = $router;
@@ -27,6 +40,11 @@ class VerificationController extends AbstractController
 
     /**
      * @Route("/verify/{id}", name="app_verify_email")
+     *
+     * Verifies a user's email by the user's id. Sends a confirmation email if the email is verified.
+     *
+     * @param int $id User id
+     * @return Response
      */
     public function verifyEmail(int $id)
     {

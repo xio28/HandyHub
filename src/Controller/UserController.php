@@ -15,12 +15,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * Class UserController
+ * 
+ * This controller manages user-related routes
+ */
 class UserController extends AbstractController
 {
     private $documentManager;
     private $userService;
     private $security;
 
+    /**
+     * UserController constructor.
+     *
+     * @param UserService $userService
+     * @param DocumentManager $documentManager
+     * @param Security $security
+     */
     public function __construct(UserService $userService, DocumentManager $documentManager, Security $security)
     {
         $this->documentManager = $documentManager;
@@ -30,6 +42,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/register/client", name="app_client_register")
+     *
+     * Handles client registration
      */
     public function registerClient(Request $request)
     {
@@ -50,6 +64,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/register/specialist", name="app_specialist_register")
+     *
+     * Handles specialist registration
      */
     public function registerSpecialist(Request $request, CategoryRepository $categoryRepository)
     {
@@ -73,6 +89,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/register/admin", name="app_admin_register")
+     *
+     * Handles admin registration
      */
     public function registerAdmin(Request $request)
     {
@@ -96,6 +114,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/update/client", name="app_client_update")
+     *
+     * Handles client update
      */
     public function updateClient(Request $request)
     {
@@ -113,9 +133,10 @@ class UserController extends AbstractController
         } 
     }
     
-
     /**
      * @Route("/update/specialist", name="app_specialist_update")
+     *
+     * Handles specialist update
      */
     public function updateSpecialist(Request $request)
     {
@@ -135,6 +156,8 @@ class UserController extends AbstractController
     
     /**
      * @Route("/resend_email/{id}", name="app_resend_email", methods={"POST"})
+     *
+     * Resends email to user with the provided ID
      */
     public function resendEmail(int $id)
     {
@@ -144,7 +167,9 @@ class UserController extends AbstractController
 
     /**
      * @Route("/delete_user/{id}", name="app_delete_user", methods={"DELETE"})
-    */
+     *
+     * Deletes user with the provided ID
+     */
     public function deleteUser(int $id): Response
     {
         $this->userService->deleteUserById($id);
@@ -154,6 +179,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/get/users", name="app_get_users")
+     *
+     * Fetches all users
      */
     public function getUsers()
     {
@@ -164,6 +191,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/get/specialists", name="app_get_specialists")
+     *
+     * Fetches all specialist users
      */
     public function getSpecialists(UserRepository $userRepository)
     {

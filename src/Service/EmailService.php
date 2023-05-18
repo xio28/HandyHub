@@ -5,15 +5,33 @@ namespace App\Service;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
+/**
+ * Class EmailService
+ *
+ * Service class for sending emails.
+ */
 class EmailService
 {
+    /**
+     * @var MailerInterface
+     */
     private $mailer;
 
+    /**
+     * EmailService constructor.
+     *
+     * @param MailerInterface $mailer The MailerInterface instance.
+     */
     public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;
     }
 
+    /**
+     * Send an account verification confirmation email.
+     *
+     * @param string $to The recipient email address.
+     */
     public function sendAccountVerificationConfirmationEmail(string $to)
     {
         $email = (new Email())
@@ -25,6 +43,12 @@ class EmailService
         $this->mailer->send($email);
     }
 
+    /**
+     * Send a verification email.
+     *
+     * @param string $to The recipient email address.
+     * @param string $verificationLink The verification link.
+     */
     public function sendVerificationEmail(string $to, string $verificationLink)
     {
         $email = (new Email())

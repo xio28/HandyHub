@@ -37,6 +37,7 @@ Encore
     .addStyleEntry('contract-css', './assets/styles/contract.css')
     .addStyleEntry('contact-css', './assets/styles/form_contact.css')
     .addStyleEntry('table', './assets/styles/table.css')
+    .addStyleEntry('invoice-css', './assets/styles/invoice.css')
     // .addStyleEntry('sm-menu', './assets/styles/menu.css')
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

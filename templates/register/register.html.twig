@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} HandyHub | Registro {% endblock %}
+
 {% block body %}
     {% if controllerName == 'app_client_register' %}
         {% include 'forms/client_form.html.twig' with { 'actionPath': controllerName } %}

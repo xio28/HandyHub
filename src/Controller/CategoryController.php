@@ -12,10 +12,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * Class CategoryController
+ *
+ * This class provides actions for managing categories.
+ */
 class CategoryController extends AbstractController
 {
     private $serializer;
 
+    /**
+     * CategoryController constructor.
+     *
+     * @param SerializerInterface $serializer The serializer.
+     */
     public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
@@ -23,6 +33,13 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/register/categories", name="app_categories_register", methods={"POST"})
+     *
+     * Registers a category.
+     *
+     * @param Request $request The current request.
+     * @param CategoryService $categoryService The category service.
+     * @return JsonResponse A JsonResponse instance.
+     * @throws \Exception If there's an error in registering the category.
      */
     public function registerCategory(Request $request, CategoryService $categoryService)
     {
@@ -38,7 +55,13 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/delete_category/{id}", name="app_delete_category", methods={"DELETE"})
-    */
+     *
+     * Deletes a category by id.
+     *
+     * @param int $id The category id.
+     * @param CategoryService $categoryService The category service.
+     * @return JsonResponse A JsonResponse instance.
+     */
     public function deleteCategory(int $id, CategoryService $categoryService): Response
     {
         $categoryService->deleteCategoryById($id);
@@ -48,6 +71,13 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/update_category/{id}", name="app_update_category", methods={"PUT"})
+     *
+     * Updates a category by id.
+     *
+     * @param Request $request The current request.
+     * @param int $id The category id.
+     * @param CategoryService $categoryService The category service.
+     * @return JsonResponse A JsonResponse instance.
      */
     public function updateCategory(Request $request, int $id, CategoryService $categoryService): Response
     {
@@ -67,6 +97,11 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/get/categories", name="app_get_categories")
+     *
+     * Retrieves or registers categories based on the request method.
+     *
+     * @param Request $request The current request.
+     * @return Response|RedirectResponse A Response or RedirectResponse instance.
      */
     public function getCategories(Request $request)
     {
@@ -76,9 +111,8 @@ class CategoryController extends AbstractController
             if ($success) {
                 return $this->redirectToRoute('app_index');
             } else {
-                throw new \Exception('Ha habido un error al registrarte. Por favor, inténtalo de nuevo.');
+                throw new \Exception('Error when trying to get categories.');
             }
-            // return new RedirectResponse('Usuario registrado con éxito.', 200);
         } 
 
         return $this->render('register/register.html.twig', [

@@ -4,7 +4,12 @@ namespace App\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
+
 /**
+ * Class ContractsDocument
+ *
+ * Represents a contract document.
+ *
  * @MongoDB\Document(collection="contracts")
  */
 class ContractsDocument
@@ -15,58 +20,69 @@ class ContractsDocument
 
     /**
      * @MongoDB\Id(strategy="INCREMENT")
+     * @var int|null
      */
     private $id;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument=UsersDocument::class, storeAs="id")
+     * @var UsersDocument|null
      */
     private $client;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument=UsersDocument::class, storeAs="id")
+     * @var UsersDocument|null
      */
     private $specialist;
 
     /**
      * @MongoDB\Field(type="date")
+     * @var \DateTime|null
      */
     private $date;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string|null
      */
     private $hourIn;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string|null
      */
     private $hourOut;
 
     /**
      * @MongoDB\Field(type="float")
+     * @var float|null
      */
     private $pricePerHour;
 
     /**
      * @MongoDB\Field(type="float")
+     * @var float
      */
     private $tax = 0.07;
 
     /**
      * @MongoDB\Field(type="float")
+     * @var float|null
      */
     private $totalPrice;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string
      */
     private $status = self::STATUS_IN_PROGRESS;
 
     /**
      * @MongoDB\Field(type="bool")
+     * @var bool
      */
-    private $paid = false;
+    private $paid;
 
     /**
      * Get the ID of the contract.
@@ -281,6 +297,29 @@ class ContractsDocument
     public function setStatus(string $status): ContractsDocument
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the paid value of the contract.
+     *
+     * @return bool The paid of the contract.
+     */
+    public function getPaid(): bool
+    {
+        return $this->paid;
+    }
+
+    /**
+     * Set the paid value for the contract.
+     *
+     * @param bool $paid The paid boolean to set.
+     * @return ContractsDocument The contract, for chaining.
+     */
+    public function setPaid(bool $paid)
+    {
+        $this->paid = $paid;
 
         return $this;
     }

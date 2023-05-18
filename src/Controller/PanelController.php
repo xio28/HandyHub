@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security as Sec;
 
+/**
+ * Class PanelController
+ *
+ * Controller for handling panel page routes.
+ */
 class PanelController extends AbstractController
 {
     private $userRepository;

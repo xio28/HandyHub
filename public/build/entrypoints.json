@@ -139,6 +139,14 @@
       "css": [
         "/build/table.css"
       ]
+    },
+    "invoice-css": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/invoice-css.css"
+      ]
     }
   }
 }

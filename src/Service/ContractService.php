@@ -5,27 +5,67 @@ use App\Document\ContractsDocument;
 use App\Document\UsersDocument;
 use App\Repository\ContractRepository;
 use App\Repository\UserRepository;
+use App\Service\InvoiceService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-
+/**
+ * Class ContractService
+ * 
+ * Service class to manage contract lifecycle.
+ */
 class ContractService {
+    /**
+     * @var InvoiceService
+     */
+    private $invoiceService;
+
+    /**
+     * @var DocumentManager
+     */
     private $documentManager;
+
+    /**
+     * @var ContractRepository
+     */
     private $contractRepository;
+
+    /**
+     * @var UserRepository
+     */
     private $userRepository;
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
+
+    /**
+     * @var SessionInterface
+     */
     private $session;
 
+    /**
+     * ContractService constructor.
+     * @param InvoiceService $invoiceService
+     * @param DocumentManager $documentManager
+     * @param ContractRepository $contractRepository
+     * @param UserRepository $userRepository
+     * @param LoggerInterface $logger
+     * @param SessionInterface $session
+     */
     public function __construct(
+        InvoiceService $invoiceService,
         DocumentManager $documentManager, 
         ContractRepository $contractRepository, 
         UserRepository $userRepository,
         LoggerInterface $logger,
         SessionInterface $session,
     ) {
+        $this->invoiceService = $invoiceService;
         $this->documentManager = $documentManager;
         $this->contractRepository = $contractRepository;
         $this->userRepository = $userRepository;
@@ -33,6 +73,11 @@ class ContractService {
         $this->session = $session;
     }
 
+    /**
+     * Registers a contract in the system
+     *
+     * @return bool|Response True if successful, or an HTTP response indicating an error.
+     */
     public function registerContract()
     {
         try {
@@ -59,6 +104,7 @@ class ContractService {
     
             $contract->setPricePerHour($preContract['specialists']['pricePerHour']);
             $contract->setStatus(ContractsDocument::STATUS_IN_PROGRESS);
+            $contract->setPaid(false);
     
             $totalPrice = $preContract['specialists']['pricePerHour'] + ($preContract['specialists']['pricePerHour'] * $contract->getTax());
             $contract->setTotalPrice($totalPrice);
@@ -70,11 +116,17 @@ class ContractService {
     
         } catch (Exception $e) {
             $this->logger->error('Contract register failed: ' . $e->getMessage());
-            return new Response('Ha habido un error al registrar el contrato. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new Response('Contract register failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     
 
+    /**
+     * Prepares a pre-contract based on a given request.
+     *
+     * @param Request $request The request containing the data needed to create the pre-contract.
+     * @return array|Response An array containing the pre-contract data if successful, or an HTTP response indicating an error.
+     */
     public function preContract(Request $request)
     {
         try {
@@ -82,14 +134,20 @@ class ContractService {
             $specialists = $this->userRepository->getUsersByRole('ROLE_SPECIALIST');
     
             $clientData = [];
+            $clientId = (int) $request->get('clientId');
+
             foreach ($clients as $client) {
-                $clientData[] = [
-                    'id' => $client->getId(),
-                    'name' => $client->getName(),
-                    'surname' => $client->getSurname(),
-                    'address' => $client->getAddress(),
-                    'telephone' => $client->getTelephone()
-                ];
+                if ($client->getId() === $clientId) {
+                    $clientData = [
+                        'id' => $client->getId(),
+                        'name' => $client->getName(),
+                        'surname' => $client->getSurname(),
+                        'address' => $client->getAddress(),
+                        'telephone' => $client->getTelephone()
+                    ];
+                    
+                    break;
+                }
             }
     
             $specialistData = [];
@@ -120,7 +178,7 @@ class ContractService {
             $adjustedDateTime = $this->getAdjustedDateTime();
     
             $this->session->set('preContract', [
-                'clients' => $clientData[0],
+                'clients' => $clientData,
                 'specialists' => $specialistData,
                 'date' => $adjustedDateTime['date'],
                 'hour' => $adjustedDateTime['time'],
@@ -139,6 +197,12 @@ class ContractService {
         }
     }
     
+    /**
+     * Finalizes a contract.
+     *
+     * @param ContractsDocument $contract The contract to be finalized.
+     * @return bool|Response True if successful, or an HTTP response indicating an error.
+     */
     public function finishContract(ContractsDocument $contract)
     {
         try {
@@ -154,35 +218,29 @@ class ContractService {
             $contract->setHourOut($hourOut);
             $contract->setTotalPrice($totalPrice);
             $contract->setStatus(ContractsDocument::STATUS_COMPLETED);
+            $contract->setPaid(true);
     
             $specialist = $contract->getSpecialist();
             $specialist->setIsAvailable(true);
-    
+            
             $this->documentManager->persist($contract);
             $this->documentManager->persist($specialist);
             $this->documentManager->flush();
+
+            
+            try {
+                $invoice = $this->invoiceService->generateInvoice($contract);
+            } catch (Exception $e) {
+                $this->logger->error('Error in : ' . $e->getMessage());
+                return new Response('Error trying to finish the contract.', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
     
             return true;
         } catch (Exception $e) {
             $this->logger->error('Finish contract failed: ' . $e->getMessage());
-            return new Response('Ha habido un error al finalizar el contrato. Por favor, inténtalo de nuevo.', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new Response('Error trying to finish the contract.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }    
-    
-
-    // public function cancelContract(int $id)
-    // {
-    //     $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($id);
-    
-    //     if (!$contract) {
-    //         throw new \Exception('Contract not found.');
-    //     }
-    
-    //     $contract->setStatus(ContractsDocument::STATUS_REJECTED);
-    
-    //     $this->documentManager->persist($contract);
-    //     $this->documentManager->flush();
-    // }
+    }  
 
     /**
      * Get the current date and time, and adjust them according to specific rules:

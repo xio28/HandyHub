@@ -29,3 +29,9 @@ services:
     App\Service\UserService:
         arguments:
             $publicDirectory: '%public_directory%'
+    App\Service\InvoiceService:
+        arguments:
+            $publicDirectory: '%public_directory%'
+    App\Controller\InvoiceController:
+        arguments:
+            $publicDirectory: '%public_directory%'

@@ -72,7 +72,6 @@
                 </span>
             </div>
         </div>
-
         <div id="page-container">
             <div id="content-users-page" class="page active">
                 <div class="card">
@@ -249,9 +248,7 @@
                                             <span class="material-icons">thumb_down_alt</span>
                                         </button> #}
                                     {% elseif contract.status == 'completed' %}
-                                        <button class="btn check-contract" type="button">
-                                            Ver factura
-                                        </button>
+                                        <a class="btn check-contract" href="{{ path('app_get_invoice', {'contractId': contract.id}) }}" target="_blank">Ver factura</a>
                                     {# {% elseif contract.status == 'rejected' %}
                                         <button class="btn edit-contract">
                                             Ver

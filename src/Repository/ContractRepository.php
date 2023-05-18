@@ -6,8 +6,16 @@ use App\Document\ContractsDocument;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\MongoDBException;
 
+/**
+ * Class ContractRepository
+ *
+ * Repository class for ContractsDocument.
+ */
 class ContractRepository
 {
+    /**
+     * @var DocumentManager
+     */
     private $documentManager;
 
     /**
@@ -24,6 +32,7 @@ class ContractRepository
      * Get all contracts.
      *
      * @return ContractsDocument[]|null An array of ContractsDocument instances, or null if none found.
+     * @throws MongoDBException
      */
     public function getAll(): ?array
     {
@@ -35,6 +44,7 @@ class ContractRepository
      *
      * @param int $userId The ID of the user.
      * @return ContractsDocument[]|null An array of ContractsDocument instances, or null if none found.
+     * @throws MongoDBException
      */
     public function getContractsByUserId(int $userId): ?array
     {
@@ -47,33 +57,6 @@ class ContractRepository
 
         return $contracts;
     }
-
-    // /**
-    //  * Check if the logged-in user ID matches the client ID in a contract.
-    //  *
-    //  * @param int $contractId The ID of the contract.
-    //  * @param int $userId The ID of the logged-in user.
-    //  * @return bool True if the IDs match, false otherwise.
-    //  */
-    // public function userInContract(int $contractId, int $userId): bool
-    // {
-    //     /** 
-    //      * @var ContractsDocument $contract 
-    //      */
-    //     $contract = $this->documentManager->getRepository(ContractsDocument::class)->find($contractId);
-        
-    //     if ($contract && $contract->getClient()) {
-    //         /** 
-    //          * @var UsersDocument $client
-    //          */
-    //         $client = $contract->getClient();
-
-    //         return $client->getId() === $userId;
-    //     }
-        
-    //     return false;
-    // }
-
 }
 
 ?>

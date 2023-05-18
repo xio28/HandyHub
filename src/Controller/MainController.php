@@ -9,11 +9,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class MainController
+ *
+ * Controller for handling main page routes.
+ */
 class MainController extends AbstractController
 {
     private $categoryRepository;
     private $userRepository;
 
+    /**
+     * MainController constructor.
+     *
+     * @param CategoryRepository $categoryRepository The repository for Category entities.
+     * @param UserRepository $userRepository The repository for User entities.
+     * @param ContractRepository $contractRepository The repository for Contract entities.
+     */
     public function __construct(CategoryRepository $categoryRepository, UserRepository $userRepository, ContractRepository $contractRepository)
     {
         $this->categoryRepository = $categoryRepository;
@@ -22,7 +34,10 @@ class MainController extends AbstractController
     }
 
     /**
+     * Handles the request for the homepage ("/").
+     *
      * @Route("/", name="app_index")
+     * @return Response
      */
     public function index(): Response
     {
@@ -31,18 +46,6 @@ class MainController extends AbstractController
             return $specialist->getImage() !== null;
         });
 
-
-        // return $this->render('panels/client_panel.html.twig');
-        // $users = $this->userRepository->getAll();
-        // $categories = $this->categoryRepository->getAll();
-        // $contracts = $this->contractRepository->getAll();
-
-        // return $this->render('panels/admin_panel.html.twig', [
-        //     'users' => $users,
-        //     'categories' => $categories,
-        //     'contracts' => $contracts,
-        // ]);
-        // return $this->render('contract/start_contract.html.twig');
         return $this->render('index/index.html.twig', [
             'register' => 'app_client_register',
             'specialists' => 'app_specialist_register',
@@ -51,7 +54,10 @@ class MainController extends AbstractController
     }
 
     /**
+     * Handles the request for the services page ("/services").
+     *
      * @Route("/services", name="app_services")
+     * @return Response
      */
     public function services(): Response
     {
@@ -63,7 +69,10 @@ class MainController extends AbstractController
     }
 
     /**
+     * Handles the request for the about page ("/about").
+     *
      * @Route("/about", name="app_about")
+     * @return Response
      */
     public function about(): Response
     {
@@ -71,7 +80,10 @@ class MainController extends AbstractController
     }
 
     /**
+     * Handles the request for the contact page ("/support").
+     *
      * @Route("/support", name="app_support")
+     * @return Response
      */
     public function contact(): Response
     {
@@ -79,11 +91,19 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/error", name="app_error_page")
+     * Handles the request for the error page ("/error") taking the {code}.
+     *
+     * @Route("/error/{code}", name="app_error_page")
+     * @return Response
      */
-    public function errorPage(): Response
+    public function errorPage(int $code): Response
     {
-        return $this->render('error/404.html.twig');
+        if ($code === 404) {
+            return $this->render('errors/404.html.twig');
+        } 
+        elseif ($code === 500) {
+            return $this->render('errors/500.html.twig');
+        }
     }
 }
 

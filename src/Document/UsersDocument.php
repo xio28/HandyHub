@@ -8,92 +8,113 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * Class UsersDocument
+ *
+ * Represents a user document.
+ *
  * @MongoDB\Document(collection="users")
  */
 class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @MongoDB\Id(strategy="INCREMENT")
+     * @var mixed
      */
     private $id;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string
      */
     private $email;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string
      */
     private $password;
 
-    /**
+        /**
      * @MongoDB\Field(type="string")
+     * @var string
      */
     private $name;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string
      */
     private $surname;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string|null
      */
     private $address;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string|null
      */
     private $telephone;
 
     /**
      * @MongoDB\Field(type="collection")
+     * @var array
      */
     private $roles = [];
 
     /**
      * @MongoDB\ReferenceOne(targetDocument=CategoriesDocument::class, storeAs="id")
+     * @var CategoriesDocument|null
      */
     private $category;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string|null
      */
     private $image;
 
     /**
      * @MongoDB\Field(type="float")
+     * @var float|null
      */
     private $pricePerHour;
 
     /**
      * @MongoDB\Field(type="bool")
+     * @var bool|null
      */
     private $policy;
 
     /**
      * @MongoDB\Field(type="bool")
+     * @var bool|null
      */
     private $isAvailable;
 
     /**
      * @MongoDB\Field(type="bool")
+     * @var bool
      */
     private $isVerified = false;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string|null
      */
     private $verificationToken;
 
     /**
      * @MongoDB\Field(type="string")
+     * @var string|null
      */
     private $currentAccount;
 
     /**
      * @MongoDB\Field(type="hash")
+     * @var array|null
      */
     private $creditCard;
 
@@ -131,6 +152,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
      * Set the email of the user.
      *
      * @param string $email The email to set.
+     * @return void
      */
     public function setEmail(string $email)
     {
@@ -151,6 +173,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
      * Set the password of the user.
      *
      * @param string $password The password to set.
+     * @return void
      */
     public function setPassword(string $password)
     {
@@ -171,6 +194,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
      * Set the name of the user.
      *
      * @param string $name The name to set.
+     * @return void
      */
     public function setName(string $name)
     {
@@ -191,6 +215,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
      * Set the surname of the user.
      *
      * @param string $surname The surname to set.
+     * @return void
      */
     public function setSurname(string $surname)
     {
@@ -210,9 +235,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the address of the user.
      *
-     * @param string $address The address to set.
+     * @param string|null $address The address to set.
+     * @return void
      */
-    public function setAddress(string $address)
+    public function setAddress(?string $address)
     {
         $this->address = $address;
     }
@@ -230,9 +256,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the telephone number of the user.
      *
-     * @param string $telephone The telephone number to set.
+     * @param string|null $telephone The telephone number to set.
+     * @return void
      */
-    public function setTelephone(string $telephone)
+    public function setTelephone(?string $telephone)
     {
         $this->telephone = $telephone;
     }
@@ -277,6 +304,7 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
      * Set the category for the user.
      *
      * @param CategoriesDocument|null $category The category to set.
+     * @return void
      */
     public function setCategory(?CategoriesDocument $category)
     {
@@ -319,9 +347,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the price per hour for the user.
      *
-     * @param float $pricePerHour The price per hour to set.
+     * @param float|null $pricePerHour The price per hour to set.
+     * @return void
      */
-    public function setPricePerHour(float $pricePerHour)
+    public function setPricePerHour(?float $pricePerHour)
     {
         $this->pricePerHour = $pricePerHour;
     }
@@ -339,9 +368,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the policy status for the user.
      *
-     * @param bool $policy The policy status to set.
+     * @param bool|null $policy The policy status to set.
+     * @return void
      */
-    public function setPolicy(bool $policy)
+    public function setPolicy(?bool $policy)
     {
         $this->policy = $policy;
     }
@@ -359,9 +389,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the availability status for the user.
      *
-     * @param bool $isAvailable The availability status to set.
+     * @param bool|null $isAvailable The availability status to set.
+     * @return void
      */
-    public function setIsAvailable(bool $isAvailable)
+    public function setIsAvailable(?bool $isAvailable)
     {
         $this->isAvailable = $isAvailable;
     }
@@ -379,9 +410,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the verification status for the user.
      *
-     * @param bool $verified The verification status to set.
+     * @param bool|null $verified The verification status to set.
+     * @return void
      */
-    public function setIsVerified(bool $verified)
+    public function setIsVerified(?bool $verified)
     {
         $this->isVerified = $verified;
     }
@@ -399,9 +431,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the verification token for the user.
      *
-     * @param string $verificationToken The verification token to set.
+     * @param string|null $verificationToken The verification token to set.
+     * @return void
      */
-    public function setVerificationToken(string $verificationToken)
+    public function setVerificationToken(?string $verificationToken)
     {
         $this->verificationToken = $verificationToken;
     }
@@ -419,9 +452,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the current account for the user.
      *
-     * @param string $currentAccount The current account to set.
+     * @param string|null $currentAccount The current account to set.
+     * @return void
      */
-    public function setCurrentAccount(string $currentAccount)
+    public function setCurrentAccount(?string $currentAccount)
     {
         $this->currentAccount = $currentAccount;
     }
@@ -439,9 +473,10 @@ class UsersDocument implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set the credit card information for the user.
      *
-     * @param array $creditCard The credit card information to set.
+     * @param array|null $creditCard The credit card information to set.
+     * @return void
      */
-    public function setCreditCard(array $creditCard)
+    public function setCreditCard(?array $creditCard)
     {
         $this->creditCard = $creditCard;
     }

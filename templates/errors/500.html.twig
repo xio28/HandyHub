@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Error | 500{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('404') }}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="image">
+            <img src="{{ asset('resources/images/500.gif') }}" alt="Server in fire" />
+        </div>
+        <div class="content">
+            <h1>500</h1>
+            <h2>Upps. Parece ser que nuestros servidores echan humo</h2>
+            <p>No le prestes atención al título,
+            tú, simplemente, vuelve por donde viniste.
+            </p>
+            <a href="{{ path('app_index') }}">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -13,10 +13,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class ContractController
+ * 
+ * This class provides actions for managing contracts.
+ */
 class ContractController extends AbstractController
 {
     private $contractService;
 
+    /**
+     * ContractController constructor.
+     * 
+     * @param ContractService $contractService The contract service.
+     * @param DocumentManager $documentManager The document manager.
+     */
     public function __construct(ContractService $contractService, DocumentManager $documentManager) {
         $this->contractService = $contractService;
         $this->documentManager = $documentManager;
@@ -25,6 +36,11 @@ class ContractController extends AbstractController
     /**
      * @Route("/summary/contract", name="app_contract_summary")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * Returns the contract summary page.
+     *
+     * @param Request $request The current request.
+     * @return Response A Response instance.
      */
     public function summaryContract(Request $request)
     {
@@ -48,9 +64,14 @@ class ContractController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/start/contract", name="app_contract_start")
+     *
+     * Starts a contract.
+     *
+     * @param Request $request The current request.
+     * @return Response A Response instance.
+     * @throws \Exception If there's an error in managing the contract.
      */
     public function startContract(Request $request)
     {
@@ -63,16 +84,13 @@ class ContractController extends AbstractController
         }
     }
 
-    // /**
-    //  * @Route("/reject/contract/{id}", name="app_contract_reject")
-    //  */
-    // public function rejectContract(int $id)
-    // {
-    //     $success = $this->contractService->cancelContract($id);
-    // }
-
     /**
      * @Route("/complete/contract/", name="app_contract_complete")
+     *
+     * Completes a contract.
+     *
+     * @param Request $request The current request.
+     * @return Response|JsonResponse A Response or JsonResponse instance.
      */
     public function completeContract(Request $request)
     {
@@ -92,8 +110,8 @@ class ContractController extends AbstractController
         if ($result instanceof Response) {
             return $result;
         }
-
-        return new JsonResponse(['success' => true]);
+    
+        return $this->redirectToRoute('app_specialist_panel');
     }
 }
 ?>

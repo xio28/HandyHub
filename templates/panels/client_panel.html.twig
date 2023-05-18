@@ -181,9 +181,7 @@
                                 {% endif %}
                                 <td data-label="">
                                     {% if contract.status == 'completed' %}
-                                        <button class="btn check-contract" type="button">
-                                            Ver factura
-                                        </button>
+                                        <a class="btn check-contract" href="{{ path('app_get_invoice', {'contractId': contract.id}) }}" target="_blank">Ver factura</a>
                                     {% endif %}
                                 </td>
                             </tr>

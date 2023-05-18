@@ -16,6 +16,7 @@
   "build/contract-css.css": "/build/contract-css.css",
   "build/contact-css.css": "/build/contact-css.css",
   "build/table.css": "/build/table.css",
+  "build/invoice-css.css": "/build/invoice-css.css",
   "build/runtime.js": "/build/runtime.js",
   "build/vendors-node_modules_core-js_internals_export_js.js": "/build/vendors-node_modules_core-js_internals_export_js.js",
   "build/vendors-node_modules_core-js_internals_classof_js-node_modules_core-js_internals_is-array_js--e42e13.js": "/build/vendors-node_modules_core-js_internals_classof_js-node_modules_core-js_internals_is-array_js--e42e13.js",
