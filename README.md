@@ -1,23 +1,23 @@
 # Final project of Web Application Development
 
-## Dependencies
+## Repositorio
 
-You will need some packages, like mongoDB.dll if you use Windows system and xampp.
+- [HandyHub](https://github.com/xio28/HandyHub)
 
-## Installation
+## Instalación
 
 ### MongoDB
 
-Here is the package we need to make Symfony integrate with MongoDB Atlas.
+Necesitamos instalar esto para poder integrar mongodb en xampp (windows).
 
 - DoctrineMongoDBBundle. ([Tutorial](https://www.doctrine-project.org/projects/doctrine-mongodb-bundle/en/4.4/installation.html#install-the-bundle-with-symfony-flex)).
 
 
-### Install project
+### Instalar proyecto
 
 ```bash
 composer install
-yarn install # you could use npm if you like
+yarn install # hemos usado yarn
 ``` 
 
 ## Usage

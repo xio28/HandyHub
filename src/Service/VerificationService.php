@@ -2,62 +2,54 @@
 
 namespace App\Service;
 
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use App\Repository\UserRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Psr\Log\LoggerInterface;
 
-/**
- * Class EmailService
- *
- * Service class for sending emails.
- */
-class EmailService
+class VerificationService 
 {
-    /**
-     * @var MailerInterface
-     */
-    private $mailer;
+    private $userRepository;
+    private $documentManager;
+    private $logger;
 
-    /**
-     * EmailService constructor.
-     *
-     * @param MailerInterface $mailer The MailerInterface instance.
-     */
-    public function __construct(MailerInterface $mailer)
-    {
-        $this->mailer = $mailer;
+    public function __construct(UserRepository $userRepository, DocumentManager $documentManager, LoggerInterface $logger) {
+        $this->userRepository = $userRepository;
+        $this->documentManager = $documentManager;
+        $this->logger = $logger;
     }
 
-    /**
-     * Send an account verification confirmation email.
-     *
-     * @param string $to The recipient email address.
-     */
-    public function sendAccountVerificationConfirmationEmail(string $to)
-    {
-        $email = (new Email())
-            ->from('admin@handyhubteam.com')
-            ->to($to)
-            ->subject('Verificación correcta')
-            ->html('<p>Has verificado tu cuenta correctamente.</p>');
+    public function verifyUser($id) {
+        $user = $this->userRepository->findUserById($id);
+    
+        if (!$user) {
+            return new Response('El enlace al que estás intentando acceder ya no existe.', Response::HTTP_NOT_FOUND);
+        }
 
-        $this->mailer->send($email);
+        try {
+            $verified = $this->updateIsVerified($id, true);
+
+            if ($verified) {
+                return true;
+            }
+
+        } catch(Exception $e) {
+            $this->logger->error('User verification failed: ' . $e->getMessage());
+            return new Response('Ha habido un error al verficar tu cuenta. Por favor, contacta con soporte.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
-    /**
-     * Send a verification email.
-     *
-     * @param string $to The recipient email address.
-     * @param string $verificationLink The verification link.
-     */
-    public function sendVerificationEmail(string $to, string $verificationLink)
-    {
-        $email = (new Email())
-            ->from('admin@handyhubteam.com')
-            ->to($to)
-            ->subject('Verificación de correo electrónico')
-            ->html('<p>Por favor, verifica tu correo electrónico haciendo clic en el siguiente enlace: <a href="' . $verificationLink . '">verificar</a></p>');
+    public function updateIsVerified(int $id, bool $isVerified) {
+        $user = $this->userRepository->findUserById($id);
 
-        $this->mailer->send($email);
+        try {
+            $user->setIsVerified($isVerified);
+            $this->documentManager->flush();
+            
+            return true;
+        } catch(Exception $e) {
+            $this->logger->error('User verification failed: ' . $e->getMessage());
+            return new Response('Ha habido un error al verficar tu cuenta. Por favor, contacta con soporte.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
 
